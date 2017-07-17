@@ -1,0 +1,5 @@
+useOldWay: true
+needPermissionToMention: false
+needsPrefix: true
+Regular:
+  prefix: '@'
