@@ -3,3 +3,10 @@ needPermissionToMention: false
 needsPrefix: true
 Regular:
   prefix: '@'
+  titles:
+    enabled: true
+    title-text: test
+    subtitle-text: test
+  actionbar:
+    enabled: true
+    actionbar-text: test
