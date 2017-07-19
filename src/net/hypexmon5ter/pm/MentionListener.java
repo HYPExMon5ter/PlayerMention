@@ -1,6 +1,7 @@
 package net.hypexmon5ter.pm;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,40 +19,53 @@ public class MentionListener implements Listener {
 
     //public String replacement = ChatColor.translateAlternateColorCodes('&', PM.getConfig().getString("Regular.replacement"));
 
-    public void checkIfMentioned(String message) {
+    public void checkIfMentionedOldWay(String message, Player sender) {
+        for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if (message.toLowerCase().contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
+                if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
+                    p.sendMessage("old way");
+                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    /*
 
-        if (PM.useOldWay) {
-            for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
-                if (PM.needsPrefix) {
-                    if (message.toLowerCase().contains(PM.prefix + p.getName().toLowerCase())) {
-                        if (!(PM.exluded.contains(p.getPlayer().getUniqueId()))) {
-                            p.sendMessage("(prefix) old way");
-                        }
-                    }
-                } else {
-                    if (message.toLowerCase().contains(p.getName().toLowerCase())) {
-                        if (!(PM.exluded.contains(p.getPlayer().getUniqueId()))) {
-                            p.sendMessage("old way");
-                        }
+                                        Cooldown Section
+
+                    */
+                    if (!(sender.hasPermission("pm.bypass") || sender.hasPermission("pm.admin"))) {
+                        PM.cooldown.add(sender);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, new Runnable() {
+                            @Override
+                            public void run() {
+                                PM.cooldown.remove(sender);
+                            }
+                        }, 5 * 20);
                     }
                 }
             }
-        } else {
-            String msg = message.toLowerCase();
-            String[] split = msg.split(" ");
-            //String newMessage = message;
-            for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
-                if (PM.needsPrefix) {
-                    if (Arrays.asList(split).contains(PM.prefix + p.getName().toLowerCase())) {
-                        if (!(PM.exluded.contains(p.getPlayer().getUniqueId()))) {
-                            p.sendMessage("(prefix) new way");
-                        }
-                    }
-                } else {
-                    if (Arrays.asList(split).contains(p.getName().toLowerCase())) {
-                        if (!(PM.exluded.contains(p.getPlayer().getUniqueId()))) {
-                            p.sendMessage("new way");
-                        }
+        }
+    }
+
+    public void checkIfMentionedNewWay(String message, Player sender) {
+        String msg = message.toLowerCase();
+        String[] split = msg.split(" ");
+        //String newMessage = message;
+        for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if (Arrays.asList(split).contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
+                if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
+                    p.sendMessage("new way");
+                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    /*
+
+                                        Cooldown Section
+
+                    */
+                    if (!(sender.hasPermission("pm.bypass") || sender.hasPermission("pm.admin"))) {
+                        PM.cooldown.add(sender);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, new Runnable() {
+                            @Override
+                            public void run() {
+                                PM.cooldown.remove(sender);
+                            }
+                        }, 5 * 20);
                     }
                 }
             }
@@ -62,10 +76,18 @@ public class MentionListener implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         if (PM.getConfig().getBoolean("needPermissionToMention")) {
             if (e.getPlayer().hasPermission("pm.use")) {
-                checkIfMentioned(e.getMessage());
+                if (PM.useOldWay) {
+                    checkIfMentionedOldWay(e.getMessage(), e.getPlayer());
+                } else {
+                    checkIfMentionedNewWay(e.getMessage(), e.getPlayer());
+                }
             }
         } else {
-            checkIfMentioned(e.getMessage());
+            if (PM.useOldWay) {
+                checkIfMentionedOldWay(e.getMessage(), e.getPlayer());
+            } else {
+                checkIfMentionedNewWay(e.getMessage(), e.getPlayer());
+            }
         }
     }
 }
