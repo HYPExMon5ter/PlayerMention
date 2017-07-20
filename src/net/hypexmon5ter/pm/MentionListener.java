@@ -23,7 +23,8 @@ public class MentionListener implements Listener {
         for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (message.toLowerCase().contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
                 if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
-                    p.sendMessage("old way");
+                    //p.sendMessage("old way");
+                    PM.sendMessage(p, "%player_exp% - player_exp");
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                     /*
 
@@ -51,7 +52,8 @@ public class MentionListener implements Listener {
         for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (Arrays.asList(split).contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
                 if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
-                    p.sendMessage("new way");
+                    //p.sendMessage("new way");
+                    PM.sendMessage(p, "%player_exp% - player_exp");
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                     /*
 
