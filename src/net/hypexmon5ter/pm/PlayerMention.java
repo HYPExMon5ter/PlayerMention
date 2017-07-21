@@ -1,13 +1,12 @@
 package net.hypexmon5ter.pm;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import placeholderAPI.PlaceholderAPIPlaceholders;
-import placeholderAPI.Placeholders;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,8 +14,6 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PlayerMention extends JavaPlugin implements Listener {
-
-    private Placeholders placeholders;
 
     public Set<UUID> excluded = new HashSet<>();
     public ArrayList<Player> cooldown = new ArrayList<>();
@@ -39,19 +36,30 @@ public class PlayerMention extends JavaPlugin implements Listener {
         console.sendMessage(consolePrefix + "§ahas successfully loaded, enjoy!");
         console.sendMessage("Info:");
         console.sendMessage("Running version: " + pdfFile.getVersion());
-        if (setupPlaceholders()) {
+        /*if (setupPlaceholders()) {
             console.sendMessage("Hooked into PlaceholderAPI.");
-        }
+        }*/
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     public void onDisable() {
 
     }
 
-    private boolean setupPlaceholders() {
+    public String convertPlaceholders(Player p, String msg) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            console.sendMessage("Parsing placeholders..");
+            return PlaceholderAPI.setPlaceholders(p.getPlayer(), msg);
+        } else {
+            console.sendMessage("Couldn't parse placeholders, returning msg.");
+            return msg;
+        }
+    }
+
+/*    private boolean setupPlaceholders() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIPlaceholders();
             return true;
@@ -72,5 +80,5 @@ public class PlayerMention extends JavaPlugin implements Listener {
         } else {
             p.sendMessage(msg);
         }
-    }
+    }*/
 }
