@@ -1,14 +1,11 @@
 package placeholderStuff;
 
+import org.bukkit.entity.Player;
+
 public class PlaceholderHook extends PlaceholderSupport {
 
     @Override
-    public void setPlaceHolder(String variable, Object value) {
+    public void setPlaceHolder(Player p, String msg) {
         //what do I put here?
-    }
-    @Override
-    public Object getPlaceHolder(String variable) {
-        //and here?
-        return variable;
     }
 }
