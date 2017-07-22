@@ -23,14 +23,9 @@ public class MentionListener implements Listener {
         for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (message.toLowerCase().contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
                 if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
-                    p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "%player_name%"));
-                    //PM.sendMessage(p, "%player_exp% - player_exp");
+                    p.sendMessage("old way");
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                    /*
 
-                                        Cooldown Section
-
-                    */
                     if (!(sender.hasPermission("pm.bypass") || sender.hasPermission("pm.admin"))) {
                         PM.cooldown.add(sender);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, new Runnable() {
@@ -52,14 +47,9 @@ public class MentionListener implements Listener {
         for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
             if (Arrays.asList(split).contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
                 if (!(PM.excluded.contains(p.getPlayer().getUniqueId()) || (PM.cooldown.contains(p.getPlayer())/* || (sender.getName() == p.getName())*/))) {
-                    p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "%player_name%"));
-                    //PM.sendMessage(p, "%player_exp% - player_exp");
+                    p.sendMessage("new way");
                     p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                    /*
 
-                                        Cooldown Section
-
-                    */
                     if (!(sender.hasPermission("pm.bypass") || sender.hasPermission("pm.admin"))) {
                         PM.cooldown.add(sender);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, new Runnable() {
