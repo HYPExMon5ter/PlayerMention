@@ -1,10 +1,11 @@
 package events;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class OnMentionEvent extends Event {
+public class OnMentionEvent extends Event implements Cancellable {
 
     Player mentioner;
     Player mentioned;
@@ -32,4 +33,13 @@ public class OnMentionEvent extends Event {
         return handlers;
     }
 
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
+
+    @Override
+    public void setCancelled(boolean b) {
+
+    }
 }

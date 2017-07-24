@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
 
 public class OldWay {
 
+    Misc misc;
     private PlayerMention PM;
 
     public OldWay(PlayerMention PM) {
         this.PM = PM;
+        misc = new Misc(PM);
     }
-
-    Misc misc = new Misc(PM);
 
     public void checkIfMentionedOldWay(String message, Player sender) {
         for (final Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -24,7 +24,10 @@ public class OldWay {
                     if (misc.handleHooks(p, sender))
                         return;
 
-                    Bukkit.getPluginManager().callEvent(new OnMentionEvent(sender, p));
+                    OnMentionEvent event = new OnMentionEvent(sender, p);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (event.isCancelled())
+                        return;
 
                     p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "old way"));
 

@@ -8,14 +8,15 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class MentionListener implements Listener {
 
+    OldWay oldway;
+    NewWay newway;
     private PlayerMention PM;
 
     public MentionListener(PlayerMention PM) {
         this.PM = PM;
+        oldway = new OldWay(PM);
+        newway = new NewWay(PM);
     }
-
-    OldWay oldway = new OldWay(PM);
-    NewWay newway = new NewWay(PM);
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {

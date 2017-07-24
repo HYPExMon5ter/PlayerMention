@@ -1,6 +1,12 @@
 package net.hypexmon5ter.pm;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.Getter;
 import com.earth2me.essentials.Essentials;
+import events.OnMentionEvent;
 import events.PlayerMentionCheck;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -8,6 +14,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import skript.ExprMentionedPlayer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +26,6 @@ public class PlayerMention extends JavaPlugin {
     public Set<UUID> excluded = new HashSet<>();
     public ArrayList<Player> cooldown = new ArrayList<>();
 
-    //public String messagePrefix = getConfig().getString("messagePrefix");
     public boolean useOldWay;
     public boolean needsPrefix;
     public boolean essentialsHook;
@@ -73,6 +79,21 @@ public class PlayerMention extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
+
+        if (getServer().getPluginManager().isPluginEnabled("Skript")) {
+            Skript.registerAddon(this);
+            Skript.registerExpression(ExprMentionedPlayer.class, Player.class, ExpressionType.SIMPLE, "[the] mentioned player", "mentioned player");
+            Skript.registerEvent("Player Mention", SimpleEvent.class, OnMentionEvent.class, "mention [of player]");
+
+            EventValues.registerEventValue(OnMentionEvent.class, Player.class,
+                    new Getter<Player, OnMentionEvent>(){
+                        @Override
+                        public Player get(OnMentionEvent event) {
+                            return event.getPlayerMentioned();
+                        }
+                    }, 0);
+
+        }
     }
 
     public void onDisable() {

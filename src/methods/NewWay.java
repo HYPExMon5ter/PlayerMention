@@ -10,13 +10,13 @@ import java.util.Arrays;
 
 public class NewWay {
 
+    Misc misc;
     private PlayerMention PM;
 
     public NewWay(PlayerMention PM) {
         this.PM = PM;
+        misc = new Misc(PM);
     }
-
-    Misc misc = new Misc(PM);
 
     public void checkIfMentionedNewWay(String message, Player sender) {
         String msg = message.toLowerCase();
@@ -29,7 +29,10 @@ public class NewWay {
                     if (misc.handleHooks(p, sender))
                         return;
 
-                    Bukkit.getPluginManager().callEvent(new OnMentionEvent(sender, p));
+                    OnMentionEvent event = new OnMentionEvent(sender, p);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (event.isCancelled())
+                        return;
 
                     p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "new way"));
 
