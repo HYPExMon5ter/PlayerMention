@@ -1,5 +1,7 @@
 package net.hypexmon5ter.pm;
 
+import com.earth2me.essentials.Essentials;
+import events.PlayerMentionCheck;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -13,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class PlayerMention extends JavaPlugin implements Listener {
+public class PlayerMention extends JavaPlugin {
 
     public Set<UUID> excluded = new HashSet<>();
     public ArrayList<Player> cooldown = new ArrayList<>();
@@ -29,7 +31,9 @@ public class PlayerMention extends JavaPlugin implements Listener {
     public String consolePrefix = "[PlayerMention] ";
     public String regPrefix = getConfig().getString("Regular.prefix");
 
-    ConsoleCommandSender console = Bukkit.getConsoleSender();
+    ConsoleCommandSender console;
+
+    public Essentials ess;
 
     public boolean isPAPIEnabled;
     public boolean isMVdWEnabled;
@@ -38,22 +42,17 @@ public class PlayerMention extends JavaPlugin implements Listener {
     public boolean isMcmmoEnabled;
     public boolean isPremiumVanishEnabled;
 
-
     public void onEnable() {
-        isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-        isMVdWEnabled = Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI");
-        isEssentialsEnabled = Bukkit.getPluginManager().isPluginEnabled("Essentials");
-        isFactionChatEnabled = Bukkit.getPluginManager().isPluginEnabled("FactionChat");
-        isMcmmoEnabled = Bukkit.getPluginManager().isPluginEnabled("mcMMO");
-        isPremiumVanishEnabled = Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish");
+        checkHooks();
 
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        checkHooks();
+        checkHooksInConfig();
 
         PluginDescriptionFile pdfFile = getDescription();
 
+        console = Bukkit.getConsoleSender();
         console.sendMessage(consolePrefix + "§ahas successfully loaded, enjoy!");
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
         console.sendMessage("Info:");
@@ -63,6 +62,7 @@ public class PlayerMention extends JavaPlugin implements Listener {
         if (isMVdWEnabled)
             console.sendMessage("Hooked into MVdW's Placeholder API");
         if (isEssentialsEnabled)
+            ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
             console.sendMessage("Hooked into Essentials");
         if (isFactionChatEnabled)
             console.sendMessage("Hooked into FactionChat");
@@ -73,6 +73,7 @@ public class PlayerMention extends JavaPlugin implements Listener {
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
     }
 
     public void onDisable() {
@@ -89,6 +90,15 @@ public class PlayerMention extends JavaPlugin implements Listener {
     }
 
     public void checkHooks() {
+        isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+        isMVdWEnabled = Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI");
+        isEssentialsEnabled = Bukkit.getPluginManager().isPluginEnabled("Essentials");
+        isFactionChatEnabled = Bukkit.getPluginManager().isPluginEnabled("FactionChat");
+        isMcmmoEnabled = Bukkit.getPluginManager().isPluginEnabled("mcMMO");
+        isPremiumVanishEnabled = Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish");
+    }
+
+    public void checkHooksInConfig() {
         useOldWay = getConfig().getBoolean("useOldWay");
         needsPrefix = getConfig().getBoolean("needsPrefix");
         essentialsHook = getConfig().getBoolean("hooks.Essentials");
