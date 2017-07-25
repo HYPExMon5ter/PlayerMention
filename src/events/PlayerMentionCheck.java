@@ -18,7 +18,7 @@ public class PlayerMentionCheck implements Listener {
 
     private boolean isHYPE(Player p) {
         if (p.getUniqueId().equals("df9c0a00-cf82-4c12-800c-eee83fb68fe3") || p.getName().equalsIgnoreCase("HYPExMon5ter") ||
-            p.getUniqueId().equals("9ef3acaf-856d-4581-a56b-852e734da40c") || p.getName().equalsIgnoreCase("HYPExMon5terV2"))
+                p.getUniqueId().equals("9ef3acaf-856d-4581-a56b-852e734da40c") || p.getName().equalsIgnoreCase("HYPExMon5terV2"))
             return true;
         else
             return false;

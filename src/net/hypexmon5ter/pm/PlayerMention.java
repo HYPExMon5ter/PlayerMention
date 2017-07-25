@@ -14,7 +14,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import skript.ExprMentionedPlayer;
+import skript.ExprPlayerMentioned;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,6 +46,7 @@ public class PlayerMention extends JavaPlugin {
     public boolean isFactionChatEnabled;
     public boolean isMcmmoEnabled;
     public boolean isPremiumVanishEnabled;
+    public boolean isSkriptEnabled;
 
     public void onEnable() {
         checkHooks();
@@ -68,32 +69,32 @@ public class PlayerMention extends JavaPlugin {
             console.sendMessage("Hooked into MVdW's Placeholder API");
         if (isEssentialsEnabled)
             ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
-            console.sendMessage("Hooked into Essentials");
+        console.sendMessage("Hooked into Essentials");
         if (isFactionChatEnabled)
             console.sendMessage("Hooked into FactionChat");
         if (isMcmmoEnabled)
             console.sendMessage("Hooked into mcMMO");
         if (isPremiumVanishEnabled)
             console.sendMessage("Hooked into Premium/Super Vanish");
+        if (isSkriptEnabled)
+            console.sendMessage("Hooked into Skript");
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
 
-        if (getServer().getPluginManager().isPluginEnabled("Skript")) {
+        if (isSkriptEnabled)
             Skript.registerAddon(this);
-            Skript.registerExpression(ExprMentionedPlayer.class, Player.class, ExpressionType.SIMPLE, "[the] mentioned player", "mentioned player");
+            Skript.registerExpression(ExprPlayerMentioned.class, Player.class, ExpressionType.SIMPLE, "[the] mentioned player");
             Skript.registerEvent("Player Mention", SimpleEvent.class, OnMentionEvent.class, "mention [of player]");
 
             EventValues.registerEventValue(OnMentionEvent.class, Player.class,
-                    new Getter<Player, OnMentionEvent>(){
-                        @Override
-                        public Player get(OnMentionEvent event) {
-                            return event.getPlayerMentioned();
-                        }
-                    }, 0);
-
-        }
+                new Getter<Player, OnMentionEvent>(){
+                    @Override
+                    public Player get(OnMentionEvent event) {
+                        return event.getPlayerMentioned();
+                    }
+                }, 0);
     }
 
     public void onDisable() {
@@ -116,6 +117,7 @@ public class PlayerMention extends JavaPlugin {
         isFactionChatEnabled = Bukkit.getPluginManager().isPluginEnabled("FactionChat");
         isMcmmoEnabled = Bukkit.getPluginManager().isPluginEnabled("mcMMO");
         isPremiumVanishEnabled = Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish");
+        isSkriptEnabled = Bukkit.getPluginManager().isPluginEnabled("Skript");
     }
 
     public void checkHooksInConfig() {

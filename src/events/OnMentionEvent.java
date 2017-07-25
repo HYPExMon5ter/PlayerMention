@@ -10,6 +10,8 @@ public class OnMentionEvent extends Event implements Cancellable {
     Player mentioner;
     Player mentioned;
 
+    boolean isCancelled;
+
     public OnMentionEvent(Player mentioner, Player mentioned) {
         this.mentioner = mentioner;
         this.mentioned = mentioned;
@@ -35,11 +37,11 @@ public class OnMentionEvent extends Event implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return false;
+        return isCancelled;
     }
 
     @Override
     public void setCancelled(boolean b) {
-
+        isCancelled = b;
     }
 }
