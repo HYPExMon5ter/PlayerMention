@@ -1,5 +1,6 @@
 package net.hypexmon5ter.pm;
 
+import utils.ConfigManager;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import skript.ExprPlayerMentioned;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,6 +42,9 @@ public class PlayerMention extends JavaPlugin {
 
     public Essentials ess;
 
+    public File msgsfile;
+    ConfigManager cm;
+
     public boolean isPAPIEnabled;
     public boolean isMVdWEnabled;
     public boolean isEssentialsEnabled;
@@ -51,6 +56,7 @@ public class PlayerMention extends JavaPlugin {
     public void onEnable() {
         checkHooks();
 
+        initiateMsgs();
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -99,6 +105,13 @@ public class PlayerMention extends JavaPlugin {
 
     public void onDisable() {
 
+    }
+
+    public void initiateMsgs() {
+        msgsfile = new File(getDataFolder(), "messages.yml");
+        cm = new ConfigManager(this);
+        cm.mkdir();
+        cm.loadMsgs();
     }
 
     public String convertPlaceholders(Player p, String msg) {
