@@ -1,6 +1,5 @@
 package net.hypexmon5ter.pm;
 
-import utils.ConfigManager;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
@@ -43,7 +42,6 @@ public class PlayerMention extends JavaPlugin {
     public Essentials ess;
 
     public File msgsfile;
-    ConfigManager cm;
 
     public boolean isPAPIEnabled;
     public boolean isMVdWEnabled;
@@ -56,7 +54,6 @@ public class PlayerMention extends JavaPlugin {
     public void onEnable() {
         checkHooks();
 
-        initiateMsgs();
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -75,7 +72,7 @@ public class PlayerMention extends JavaPlugin {
             console.sendMessage("Hooked into MVdW's Placeholder API");
         if (isEssentialsEnabled)
             ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
-        console.sendMessage("Hooked into Essentials");
+            console.sendMessage("Hooked into Essentials");
         if (isFactionChatEnabled)
             console.sendMessage("Hooked into FactionChat");
         if (isMcmmoEnabled)
@@ -89,29 +86,22 @@ public class PlayerMention extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
 
-        if (isSkriptEnabled)
+        if (isSkriptEnabled) {
             Skript.registerAddon(this);
             Skript.registerExpression(ExprPlayerMentioned.class, Player.class, ExpressionType.SIMPLE, "[the] mentioned player");
             Skript.registerEvent("Player Mention", SimpleEvent.class, OnMentionEvent.class, "mention [of player]");
 
-            EventValues.registerEventValue(OnMentionEvent.class, Player.class,
-                new Getter<Player, OnMentionEvent>(){
-                    @Override
-                    public Player get(OnMentionEvent event) {
-                        return event.getPlayerMentioned();
-                    }
-                }, 0);
+            EventValues.registerEventValue(OnMentionEvent.class, Player.class, new Getter<Player, OnMentionEvent>() {
+                @Override
+                public Player get(OnMentionEvent event) {
+                    return event.getPlayerMentioned();
+                }
+            }, 0);
+        }
     }
 
     public void onDisable() {
 
-    }
-
-    public void initiateMsgs() {
-        msgsfile = new File(getDataFolder(), "messages.yml");
-        cm = new ConfigManager(this);
-        cm.mkdir();
-        cm.loadMsgs();
     }
 
     public String convertPlaceholders(Player p, String msg) {
