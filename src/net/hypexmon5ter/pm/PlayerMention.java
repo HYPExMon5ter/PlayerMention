@@ -14,8 +14,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import skript.EventVals;
 import skript.ExprPlayerMentioned;
+import utils.ConfigManager;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +44,7 @@ public class PlayerMention extends JavaPlugin {
 
     public Essentials ess;
 
-    public File msgsfile;
+    public ConfigManager config;
 
     public boolean isPAPIEnabled;
     public boolean isMVdWEnabled;
@@ -54,6 +57,8 @@ public class PlayerMention extends JavaPlugin {
     public void onEnable() {
         checkHooks();
 
+        config = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);
+        config.create(true);
         getConfig().options().copyDefaults(true);
         saveConfig();
 
@@ -91,12 +96,7 @@ public class PlayerMention extends JavaPlugin {
             Skript.registerExpression(ExprPlayerMentioned.class, Player.class, ExpressionType.SIMPLE, "[the] mentioned player");
             Skript.registerEvent("Player Mention", SimpleEvent.class, OnMentionEvent.class, "mention [of player]");
 
-            EventValues.registerEventValue(OnMentionEvent.class, Player.class, new Getter<Player, OnMentionEvent>() {
-                @Override
-                public Player get(OnMentionEvent event) {
-                    return event.getPlayerMentioned();
-                }
-            }, 0);
+            new EventVals();
         }
     }
 
