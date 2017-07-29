@@ -20,7 +20,7 @@ public class MentionListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (PM.getConfig().getBoolean("needPermissionToMention")) {
+        if (PM.needsPermission) {
             if (e.getPlayer().hasPermission("pm.use")) {
                 if (PM.useOldWay) {
                     oldway.checkIfMentionedOldWay(e.getMessage(), e.getPlayer());

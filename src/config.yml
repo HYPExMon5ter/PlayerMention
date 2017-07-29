@@ -2,16 +2,51 @@ Regular:
   prefix: '@'
   titles:
     enabled: true
-    title-text: test
-    subtitle-text: test
+    title: '&a%player%'
+    subtitle: '&dhas mentioned &byou!'
   actionbar:
     enabled: true
-    actionbar-text: test
+    text: '&a%player% &dhas mentioned &byou!'
+  particles:
+    enabled: true
+    particle-type: DRIP_WATER
+  sounds:
+    enabled: true
+    sound: LEVEL_UP
+  cooldown:
+    enabled: true
+    time: 20
+  replacement:
+    enabled: true
+    text: '&a@&l%player%&r'
+  message: '&a%player% &dhas mentioned &byou!'
+Everyone:
+  prefix: '@'
+  titles:
+    enabled: true
+    title: '&a%player%'
+    subtitle: '&dhas mentioned &beveryone!'
+  actionbar:
+    enabled: true
+    text: '&a%player% &dhas mentioned &beveryone!'
+  particles:
+    enabled: true
+    particle-type: DRIP_WATER
+  sounds:
+    enabled: true
+    sound: LEVEL_UP
+  cooldown:
+    enabled: true
+    time: 20
+  replacement:
+    enabled: true
+    text: '&a@everyone&r'
+  message: '&a%player% &dhas mentioned &beveryone!'
 useOldWay: true
 needPermissionToMention: false
 needsPrefix: true
 hooks:
   Essentials: true
-  Factions: true
+  FactionChat: true
   mcMMO: true
   SuperVanish: true

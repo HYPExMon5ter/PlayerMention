@@ -3,8 +3,8 @@ package methods;
 import events.OnMentionEvent;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import utils.Sounds;
 
 import java.util.Arrays;
 
@@ -36,7 +36,7 @@ public class NewWay {
 
                     p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "new way"));
 
-                    p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    p.playSound(p.getLocation(), Sounds.LEVEL_UP.bukkitSound(), 100.0F, 1.0F);
 
                     if (!(p.hasPermission("pm.bypass") || p.hasPermission("pm.admin"))) {
                         misc.addToCooldown(sender);
