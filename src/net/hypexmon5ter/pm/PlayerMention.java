@@ -39,9 +39,9 @@ public class PlayerMention extends JavaPlugin {
     public boolean isPremiumVanishEnabled;
     public boolean premiumVanishHook;
 
-    public boolean isPAPIEnabled;
-    public boolean isMVdWEnabled;
-    public boolean isSkriptEnabled;
+    private boolean isPAPIEnabled;
+    private boolean isMVdWEnabled;
+    private boolean isSkriptEnabled;
 
     public String consolePrefix = "[PlayerMention] ";
 
@@ -53,12 +53,12 @@ public class PlayerMention extends JavaPlugin {
     public String regActionbar;
     public boolean regParticlesEnabled;
     public String regParticle;
-    public boolean regSoundsEnabled;
     public String regSound;
     public boolean regCooldownEnabled;
     public int regCooldown;
     public boolean regReplacementEnabled;
     public String regReplacement;
+    public boolean regMessageEnabled;
     public String regMessage;
 
     public String everyonePrefix;
@@ -69,20 +69,19 @@ public class PlayerMention extends JavaPlugin {
     public String everyoneActionbar;
     public boolean everyoneParticlesEnabled;
     public String everyoneParticle;
-    public boolean everyoneSoundsEnabled;
     public String everyoneSound;
     public boolean everyoneCooldownEnabled;
     public int everyoneCooldown;
     public boolean everyoneReplacementEnabled;
     public String everyoneReplacement;
+    public boolean everyoneMessageEnabled;
     public String everyoneMessage;
-
-    ConsoleCommandSender console;
-
     public Essentials ess;
     public ConfigManager msgs;
+    ConsoleCommandSender console;
 
     public void onEnable() {
+        checkConfig();
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);
@@ -159,54 +158,37 @@ public class PlayerMention extends JavaPlugin {
     }
 
     public void checkConfig() {
-
         regPrefix = getConfig().getString("Regular.prefix");
-
         regTitlesEnabled = getConfig().getBoolean("Regular.titles.enabled");
         regTitle = getConfig().getString("Regular.titles.title");
         regSubtitle = getConfig().getString("Regular.titles.subtitle");
-
         regActionbarEnabled = getConfig().getBoolean("Regular.actionbar.enabled");
         regActionbar = getConfig().getString("Regular.actionbar.text");
-
         regParticlesEnabled = getConfig().getBoolean("Regular.particles.enabled");
         regParticle = getConfig().getString("Regular.particles.particle-type");
-
-        regSoundsEnabled = getConfig().getBoolean("Regular.sounds.enabled");
-        regSound = getConfig().getString("Regular.sounds.sound");
-
+        regSound = getConfig().getString("Regular.sound");
         regCooldownEnabled = getConfig().getBoolean("Regular.cooldown.enabled");
         regCooldown = getConfig().getInt("Regular.cooldown.time");
-
         regReplacementEnabled = getConfig().getBoolean("Regular.replacement.enabled");
         regReplacement = getConfig().getString("Regular.replacement.text");
-
-        regMessage = getConfig().getString("Regular.message");
-
-
+        regMessageEnabled = getConfig().getBoolean("Regular.message.enabled");
+        regMessage = getConfig().getString("Regular.message.text");
 
         everyonePrefix = getConfig().getString("Everyone.prefix");
-
         everyoneTitlesEnabled = getConfig().getBoolean("Everyone.titles.enabled");
         everyoneTitle = getConfig().getString("Everyone.titles.title");
         everyoneSubtitle = getConfig().getString("Everyone.titles.subtitle");
-
         everyoneActionbarEnabled = getConfig().getBoolean("Everyone.actionbar.enabled");
         everyoneActionbar = getConfig().getString("Everyone.actionbar.text");
-
         everyoneParticlesEnabled = getConfig().getBoolean("Everyone.particles.enabled");
         everyoneParticle = getConfig().getString("Everyone.particles.particle-type");
-
-        everyoneSoundsEnabled = getConfig().getBoolean("Everyone.sounds.enabled");
-        everyoneSound = getConfig().getString("Everyone.sounds.sound");
-
+        everyoneSound = getConfig().getString("Everyone.sound");
         everyoneCooldownEnabled = getConfig().getBoolean("Everyone.cooldown.enabled");
         everyoneCooldown = getConfig().getInt("Everyone.cooldown.time");
-
         everyoneReplacementEnabled = getConfig().getBoolean("Everyone.replacement.enabled");
         everyoneReplacement = getConfig().getString("Everyone.replacement.text");
-
-        everyoneMessage = getConfig().getString("Everyone.message");
+        everyoneMessageEnabled = getConfig().getBoolean("Everyone.message.enabled");
+        everyoneMessage = getConfig().getString("Everyone.message.text");
 
     }
 }

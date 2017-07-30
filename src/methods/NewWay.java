@@ -2,7 +2,10 @@ package methods;
 
 import events.OnMentionEvent;
 import net.hypexmon5ter.pm.PlayerMention;
+import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import utils.Sounds;
 
@@ -34,9 +37,19 @@ public class NewWay {
                     if (event.isCancelled())
                         return;
 
-                    p.sendMessage(PM.convertPlaceholders(p.getPlayer(), "new way"));
+                    if (PM.regMessageEnabled) {
+                        p.sendMessage(PM.convertPlaceholders(p.getPlayer(), PM.regMessage.replaceAll("%player%", p.getName()).replaceAll("%nick%", p.getDisplayName())));
+                    }
 
-                    p.playSound(p.getLocation(), Sounds.LEVEL_UP.bukkitSound(), 100.0F, 1.0F);
+                    try {
+                        if (EnumUtils.isValidEnum(Sound.class, PM.regSound)) {
+                            p.playSound(p.getLocation(), Sound.valueOf(PM.regSound), 100.0F, 1.0F);
+                        } else {
+                            p.playSound(p.getLocation(), Sounds.valueOf(PM.regSound).bukkitSound(), 100.0F, 1.0F);
+                        }
+                    } catch (Exception e) {
+                        System.err.println(PM.consolePrefix + ChatColor.RED + "That is not a valid sound (Error at 'Regular.sounds.sound')");
+                    }
 
                     if (!(p.hasPermission("pm.bypass") || p.hasPermission("pm.admin"))) {
                         misc.addToCooldown(sender);

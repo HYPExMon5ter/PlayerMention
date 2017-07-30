@@ -10,16 +10,16 @@ Regular:
   particles:
     enabled: true
     particle-type: DRIP_WATER
-  sounds:
-    enabled: true
-    sound: LEVEL_UP
+  sound: LEVEL_UP
   cooldown:
     enabled: true
     time: 20
   replacement:
     enabled: true
     text: '&a@&l%player%&r'
-  message: '&a%player% &dhas mentioned &byou!'
+  message:
+    enabled: true
+    text: '&a%player% &dhas mentioned &byou!'
 Everyone:
   prefix: '@'
   titles:
@@ -32,16 +32,16 @@ Everyone:
   particles:
     enabled: true
     particle-type: DRIP_WATER
-  sounds:
-    enabled: true
-    sound: LEVEL_UP
+  sound: LEVEL_UP
   cooldown:
     enabled: true
     time: 20
   replacement:
     enabled: true
     text: '&a@everyone&r'
-  message: '&a%player% &dhas mentioned &beveryone!'
+  message:
+    enabled: true
+    text: '&a%player% &dhas mentioned &beveryone!'
 useOldWay: true
 needPermissionToMention: false
 needsPrefix: true
