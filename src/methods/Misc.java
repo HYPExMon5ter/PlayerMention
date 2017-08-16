@@ -7,25 +7,20 @@ import nz.co.lolnet.james137137.FactionChat.API.FactionChatAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class Misc {
+class Misc {
 
     private PlayerMention PM;
 
-    public Misc(PlayerMention PM) {
+    Misc(PlayerMention PM) {
         this.PM = PM;
     }
 
-    public void addToCooldown(Player p) {
+    void addToCooldown(Player p) {
         PM.cooldown.add(p);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, new Runnable() {
-            @Override
-            public void run() {
-                PM.cooldown.remove(p);
-            }
-        }, 5 * 20);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, () -> PM.cooldown.remove(p), PM.regCooldown * 20);
     }
 
-    public boolean handleHooks(Player p, Player sender) {
+    boolean handleHooks(Player p, Player sender) {
         if (PM.isEssentialsEnabled)
             if (PM.essentialsHook)
                 if (PM.ess.getUser(p).isVanished())
@@ -33,7 +28,7 @@ public class Misc {
 
         if (PM.isFactionChatEnabled)
             if (PM.factionChatHook)
-                if (FactionChatAPI.getChatMode(sender) != "PUBLIC")
+                if (!FactionChatAPI.getChatMode(sender).equals("PUBLIC"))
                     return true;
 
         if (PM.isMcmmoEnabled)

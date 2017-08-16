@@ -8,6 +8,7 @@ import events.OnMentionEvent;
 import events.PlayerMentionCheck;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import skript.EventVals;
 import skript.ExprPlayerMentioned;
 import utils.ConfigManager;
+import utils.Metrics;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,10 +80,12 @@ public class PlayerMention extends JavaPlugin {
     public String everyoneMessage;
     public Essentials ess;
     public ConfigManager msgs;
-    ConsoleCommandSender console;
+    private ConsoleCommandSender console;
 
     public void onEnable() {
-        checkConfig();
+        Metrics metrics = new Metrics(this);
+        //metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> "My value"));
+
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);
@@ -89,7 +93,7 @@ public class PlayerMention extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        checkHooksInConfig();
+        checkConfig();
 
         PluginDescriptionFile pdfFile = getDescription();
 
@@ -150,45 +154,43 @@ public class PlayerMention extends JavaPlugin {
         isSkriptEnabled = Bukkit.getPluginManager().isPluginEnabled("Skript");
     }
 
-    public void checkHooksInConfig() {
+    public void checkConfig() {
         essentialsHook = getConfig().getBoolean("hooks.Essentials");
         factionChatHook = getConfig().getBoolean("hooks.FactionChat");
         mcmmoHook = getConfig().getBoolean("hooks.mcMMO");
         premiumVanishHook = getConfig().getBoolean("hooks.PremiumVanish");
-    }
 
-    public void checkConfig() {
-        regPrefix = getConfig().getString("Regular.prefix");
+        regPrefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.prefix"));
         regTitlesEnabled = getConfig().getBoolean("Regular.titles.enabled");
-        regTitle = getConfig().getString("Regular.titles.title");
-        regSubtitle = getConfig().getString("Regular.titles.subtitle");
+        regTitle = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.titles.title"));
+        regSubtitle = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.titles.subtitle"));
         regActionbarEnabled = getConfig().getBoolean("Regular.actionbar.enabled");
-        regActionbar = getConfig().getString("Regular.actionbar.text");
+        regActionbar = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.actionbar.text"));
         regParticlesEnabled = getConfig().getBoolean("Regular.particles.enabled");
         regParticle = getConfig().getString("Regular.particles.particle-type");
         regSound = getConfig().getString("Regular.sound");
         regCooldownEnabled = getConfig().getBoolean("Regular.cooldown.enabled");
         regCooldown = getConfig().getInt("Regular.cooldown.time");
         regReplacementEnabled = getConfig().getBoolean("Regular.replacement.enabled");
-        regReplacement = getConfig().getString("Regular.replacement.text");
+        regReplacement = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.replacement.text"));
         regMessageEnabled = getConfig().getBoolean("Regular.message.enabled");
-        regMessage = getConfig().getString("Regular.message.text");
+        regMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.message.text"));
 
-        everyonePrefix = getConfig().getString("Everyone.prefix");
+        everyonePrefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.prefix"));
         everyoneTitlesEnabled = getConfig().getBoolean("Everyone.titles.enabled");
-        everyoneTitle = getConfig().getString("Everyone.titles.title");
-        everyoneSubtitle = getConfig().getString("Everyone.titles.subtitle");
+        everyoneTitle = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.titles.title"));
+        everyoneSubtitle = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.titles.subtitle"));
         everyoneActionbarEnabled = getConfig().getBoolean("Everyone.actionbar.enabled");
-        everyoneActionbar = getConfig().getString("Everyone.actionbar.text");
+        everyoneActionbar = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.actionbar.text"));
         everyoneParticlesEnabled = getConfig().getBoolean("Everyone.particles.enabled");
         everyoneParticle = getConfig().getString("Everyone.particles.particle-type");
         everyoneSound = getConfig().getString("Everyone.sound");
         everyoneCooldownEnabled = getConfig().getBoolean("Everyone.cooldown.enabled");
         everyoneCooldown = getConfig().getInt("Everyone.cooldown.time");
         everyoneReplacementEnabled = getConfig().getBoolean("Everyone.replacement.enabled");
-        everyoneReplacement = getConfig().getString("Everyone.replacement.text");
+        everyoneReplacement = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.replacement.text"));
         everyoneMessageEnabled = getConfig().getBoolean("Everyone.message.enabled");
-        everyoneMessage = getConfig().getString("Everyone.message.text");
+        everyoneMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.message.text"));
 
     }
 }

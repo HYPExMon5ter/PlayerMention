@@ -8,11 +8,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class MentionListener implements Listener {
 
-    OldWay oldway;
-    NewWay newway;
+    private OldWay oldway;
+    private NewWay newway;
     private PlayerMention PM;
 
-    public MentionListener(PlayerMention PM) {
+    MentionListener(PlayerMention PM) {
         this.PM = PM;
         oldway = new OldWay(PM);
         newway = new NewWay(PM);
@@ -33,6 +33,13 @@ public class MentionListener implements Listener {
                 oldway.checkIfMentionedOldWay(e.getMessage(), e.getPlayer());
             } else {
                 newway.checkIfMentionedNewWay(e.getMessage(), e.getPlayer());
+            }
+        }
+        if (e.getPlayer().hasPermission("pm.everyone")) {
+            if (PM.useOldWay) {
+                oldway.checkForEveryone(e.getMessage(), e.getPlayer());
+            } else {
+                newway.checkForEveryone(e.getMessage(), e.getPlayer());
             }
         }
     }

@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class ConfigManager {
 
-	File file;
-	FileConfiguration config;
+	private File file;
+	private FileConfiguration config;
 	
-	String path;
-	String fileName;
+	private String path;
+	private String fileName;
 	
 	private Plugin main;
 	

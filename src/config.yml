@@ -13,7 +13,7 @@ Regular:
   sound: LEVEL_UP
   cooldown:
     enabled: true
-    time: 20
+    time: 5
   replacement:
     enabled: true
     text: '&a@&l%player%&r'
@@ -35,7 +35,7 @@ Everyone:
   sound: LEVEL_UP
   cooldown:
     enabled: true
-    time: 20
+    time: 5
   replacement:
     enabled: true
     text: '&a@everyone&r'
