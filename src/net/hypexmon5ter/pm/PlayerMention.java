@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.earth2me.essentials.Essentials;
+import commands.MainCommand;
 import events.OnMentionEvent;
 import events.PlayerMentionCheck;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -121,6 +122,9 @@ public class PlayerMention extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
+
+
+        getCommand("playermention").setExecutor(new MainCommand(this));
 
         if (isSkriptEnabled) {
             Skript.registerAddon(this);

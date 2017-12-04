@@ -1,5 +1,10 @@
 main: net.hypexmon5ter.pm.PlayerMention
 name: PlayerMention
 author: HYPExMon5ter
-version: pre2-3.2
-softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Essentials, FactionChat, mcMMO, SuperVanish, PremiumVanish, Skript, AutoUpdaterAPI]
+version: pre2-3.3
+softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Essentials, FactionChat, mcMMO, SuperVanish, PremiumVanish, Skript]
+
+commands:
+  playermention:
+    description: This is a test command
+    aliases: /pm
