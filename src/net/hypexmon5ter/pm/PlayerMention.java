@@ -5,8 +5,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.earth2me.essentials.Essentials;
 import commands.MainCommand;
+import events.MentionListener;
 import events.OnMentionEvent;
-import events.PlayerMentionCheck;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -120,8 +120,9 @@ public class PlayerMention extends JavaPlugin {
             console.sendMessage("Hooked into Skript");
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
+        //getServer().getPluginManager().registerEvents(new MentionListenerOld(this), this);
+        //getServer().getPluginManager().registerEvents(new IsDev(this), this);
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerMentionCheck(this), this);
 
 
         getCommand("playermention").setExecutor(new MainCommand(this));
