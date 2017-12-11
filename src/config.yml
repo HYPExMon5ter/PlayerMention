@@ -44,9 +44,11 @@ Everyone:
     text: '&a%player% &dhas mentioned &beveryone!'
 useOldWay: true
 needPermissionToMention: false
-needsPrefix: true
+needsPrefix: false
 hooks:
   Essentials: true
   FactionChat: true
   mcMMO: true
   SuperVanish: true
+  PremiumVanish: true
+  Marriage: true

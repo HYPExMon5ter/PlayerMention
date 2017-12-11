@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.earth2me.essentials.Essentials;
+import com.lenis0012.bukkit.marriage2.internal.MarriagePlugin;
 import commands.MainCommand;
 import events.MentionListener;
 import events.OnMentionEvent;
@@ -16,6 +17,9 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import skript.EventVals;
 import skript.ExprPlayerMentioned;
+import us.talabrek.ultimateskyblock.SkyBlockChunkGenerator;
+import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
+import us.talabrek.ultimateskyblock.menu.SkyBlockMenu;
 import utils.ConfigManager;
 import utils.Metrics;
 
@@ -23,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.lenis0012.bukkit.marriage2.internal.MarriagePlugin.getCore;
 
 public class PlayerMention extends JavaPlugin {
 
@@ -33,14 +39,13 @@ public class PlayerMention extends JavaPlugin {
     public boolean needsPrefix = getConfig().getBoolean("needsPrefix");
     public boolean needsPermission = getConfig().getBoolean("needPermissionToMention");
 
-    public boolean isEssentialsEnabled;
+
     public boolean essentialsHook;
-    public boolean isFactionChatEnabled;
     public boolean factionChatHook;
-    public boolean isMcmmoEnabled;
     public boolean mcmmoHook;
-    public boolean isPremiumVanishEnabled;
+    public boolean superVanishHook;
     public boolean premiumVanishHook;
+    public boolean marriageHook;
 
     private boolean isPAPIEnabled;
     private boolean isMVdWEnabled;
@@ -80,6 +85,7 @@ public class PlayerMention extends JavaPlugin {
     public boolean everyoneMessageEnabled;
     public String everyoneMessage;
     public Essentials ess;
+    //public uSkyBlockAPI uapi;
     public ConfigManager msgs;
     private ConsoleCommandSender console;
 
@@ -103,27 +109,37 @@ public class PlayerMention extends JavaPlugin {
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
         console.sendMessage("Info:");
         console.sendMessage("Running version: " + pdfFile.getVersion());
-        if (isPAPIEnabled)
+        if (isPAPIEnabled) {
             console.sendMessage("Hooked into PlaceholderAPI");
-        if (isMVdWEnabled)
+        }
+        if (isMVdWEnabled) {
             console.sendMessage("Hooked into MVdW's Placeholder API");
-        if (isEssentialsEnabled)
+        }
+        if (essentialsHook) {
             ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
             console.sendMessage("Hooked into Essentials");
-        if (isFactionChatEnabled)
+        }
+        if (factionChatHook) {
             console.sendMessage("Hooked into FactionChat");
-        if (isMcmmoEnabled)
+        }
+        if (mcmmoHook) {
             console.sendMessage("Hooked into mcMMO");
-        if (isPremiumVanishEnabled)
-            console.sendMessage("Hooked into Premium/Super Vanish");
-        if (isSkriptEnabled)
+        }
+        if (superVanishHook) {
+            console.sendMessage("Hooked into Super Vanish");
+        }
+        if (premiumVanishHook) {
+            console.sendMessage("Hooked into Premium Vanish");
+        }
+        if (marriageHook) {
+            console.sendMessage("Hooked into Marriage");
+        }
+        if (isSkriptEnabled) {
             console.sendMessage("Hooked into Skript");
+        }
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
-        //getServer().getPluginManager().registerEvents(new MentionListenerOld(this), this);
-        //getServer().getPluginManager().registerEvents(new IsDev(this), this);
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
-
 
         getCommand("playermention").setExecutor(new MainCommand(this));
 
@@ -141,21 +157,37 @@ public class PlayerMention extends JavaPlugin {
     }
 
     public String convertPlaceholders(Player p, String msg) {
-        if (isPAPIEnabled)
+        if (isPAPIEnabled) {
             return PlaceholderAPI.setPlaceholders(p.getPlayer(), msg);
-        else if (isMVdWEnabled)
+        } else if (isMVdWEnabled) {
             return be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(p.getPlayer(), msg);
-        else
+        } else {
             return msg;
+        }
     }
 
     public void checkHooks() {
+        if (!(Bukkit.getPluginManager().isPluginEnabled("Essentials"))) {
+            getConfig().set("hooks.Essentials", false);
+        }
+        if (!(Bukkit.getPluginManager().isPluginEnabled("FactionChat"))) {
+            getConfig().set("hooks.FactionChat", false);
+        }
+        if (!(Bukkit.getPluginManager().isPluginEnabled("mcMMO"))) {
+            getConfig().set("hooks.mcMMO", false);
+        }
+        if (!(Bukkit.getPluginManager().isPluginEnabled("SuperVanish"))) {
+            getConfig().set("hooks.SuperVanish", false);
+        }
+        if (!(Bukkit.getPluginManager().isPluginEnabled("PremiumVanish"))) {
+            getConfig().set("hooks.PremiumVanish", false);
+        }
+        if (!(Bukkit.getPluginManager().isPluginEnabled("Marriage"))) {
+            getConfig().set("hooks.Marriage", false);
+        }
+        saveConfig();
         isPAPIEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
         isMVdWEnabled = Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI");
-        isEssentialsEnabled = Bukkit.getPluginManager().isPluginEnabled("Essentials");
-        isFactionChatEnabled = Bukkit.getPluginManager().isPluginEnabled("FactionChat");
-        isMcmmoEnabled = Bukkit.getPluginManager().isPluginEnabled("mcMMO");
-        isPremiumVanishEnabled = Bukkit.getPluginManager().isPluginEnabled("SuperVanish") || Bukkit.getPluginManager().isPluginEnabled("PremiumVanish");
         isSkriptEnabled = Bukkit.getPluginManager().isPluginEnabled("Skript");
     }
 
@@ -163,7 +195,9 @@ public class PlayerMention extends JavaPlugin {
         essentialsHook = getConfig().getBoolean("hooks.Essentials");
         factionChatHook = getConfig().getBoolean("hooks.FactionChat");
         mcmmoHook = getConfig().getBoolean("hooks.mcMMO");
+        superVanishHook = getConfig().getBoolean("hooks.SuperVanish");
         premiumVanishHook = getConfig().getBoolean("hooks.PremiumVanish");
+        marriageHook = getConfig().getBoolean("hooks.Marriage");
 
         regPrefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Regular.prefix"));
         regTitlesEnabled = getConfig().getBoolean("Regular.titles.enabled");
@@ -196,6 +230,5 @@ public class PlayerMention extends JavaPlugin {
         everyoneReplacement = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.replacement.text"));
         everyoneMessageEnabled = getConfig().getBoolean("Everyone.message.enabled");
         everyoneMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.message.text"));
-
     }
 }

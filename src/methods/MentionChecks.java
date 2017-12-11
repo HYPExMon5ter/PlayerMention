@@ -1,6 +1,7 @@
 package methods;
 
 import com.gmail.nossr50.api.ChatAPI;
+import com.lenis0012.bukkit.marriage2.internal.MarriagePlugin;
 import de.myzelyam.api.vanish.VanishAPI;
 import net.hypexmon5ter.pm.PlayerMention;
 import nz.co.lolnet.james137137.FactionChat.API.FactionChatAPI;
@@ -17,65 +18,51 @@ public class MentionChecks {
         MU = new MentionUtilities(PM);
     }
 
-    private boolean canMentionHasPerm = false;
+    //private boolean canMentionHasPerm = false;
     private boolean notInCooldown = false;
-    private boolean notVanishedEss = false;
     private boolean notInFactionChat = false;
     private boolean notInMcmmoChat = false;
-    private boolean notVanishedPremV = false;
+    private boolean notInMarriageChat = false;
 
     public boolean canMention(Player mentioner) {
-        if (PM.isEssentialsEnabled) {
-            if (PM.essentialsHook) {
-                if (!(PM.ess.getUser(mentioner).isVanished())) {
-                    notVanishedEss = true;
-                }
-            }
-        } else {
-            notVanishedEss = true;
-        }
-        if (PM.isFactionChatEnabled) {
-            if (PM.factionChatHook) {
-                if (FactionChatAPI.getChatMode(mentioner).equals("PUBLIC")) {
-                    notInFactionChat = true;
-                }
+        if (PM.factionChatHook) {
+            if (FactionChatAPI.getChatMode(mentioner).equals("PUBLIC")) {
+                notInFactionChat = true;
             }
         } else {
             notInFactionChat = true;
         }
-        if (PM.isMcmmoEnabled) {
-            if (PM.mcmmoHook) {
-                if (!(ChatAPI.isUsingAdminChat(mentioner) || ChatAPI.isUsingPartyChat(mentioner))) {
-                    notInMcmmoChat = true;
-                }
+        if (PM.mcmmoHook) {
+            if (!(ChatAPI.isUsingAdminChat(mentioner) || ChatAPI.isUsingPartyChat(mentioner))) {
+                notInMcmmoChat = true;
             }
         } else {
             notInMcmmoChat = true;
         }
-        if (PM.isPremiumVanishEnabled) {
-            if (PM.premiumVanishHook) {
-                if (!(VanishAPI.isInvisible(mentioner))) {
-                    notVanishedPremV = true;
-                }
+        if (PM.marriageHook) {
+            if (!(MarriagePlugin.getCore().getMPlayer(mentioner).isInChat())) {
+                notInMarriageChat = true;
             }
         } else {
-            notVanishedPremV = true;
+            notInMarriageChat = true;
         }
-        if (PM.needsPermission) {
+        /*if (PM.needsPermission) {
             if (mentioner.hasPermission("pm.use")) {
                 canMentionHasPerm = true;
             }
         } else {
             canMentionHasPerm = true;
-        }
+        }*/
         if (!(MU.isInCooldown(mentioner))) {
             notInCooldown = true;
         }
-        return canMentionHasPerm && notInCooldown && notVanishedEss && notInFactionChat && notInMcmmoChat && notVanishedPremV;
+        return /*canMentionHasPerm && */notInCooldown && notInFactionChat && notInMcmmoChat && notInMarriageChat;
     }
 
     private boolean canBeMentionedHasPerm = false;
     private boolean isNotExcluded = false;
+    private boolean notVanishedEss = false;
+    private boolean notVanishedPremV = false;
 
     public boolean canBeMentioned(Player target) {
         if (target.hasPermission("pm.receive")) {
@@ -84,6 +71,20 @@ public class MentionChecks {
         if (!(PM.excluded.contains(target.getUniqueId()))) {
             isNotExcluded = true;
         }
-        return canBeMentionedHasPerm && isNotExcluded;
+        if (PM.essentialsHook) {
+            if (!(PM.ess.getUser(target).isVanished())) {
+                notVanishedEss = true;
+            }
+        } else {
+            notVanishedEss = true;
+        }
+        if (PM.premiumVanishHook || PM.superVanishHook) {
+            if (!(VanishAPI.isInvisible(target))) {
+                notVanishedPremV = true;
+            }
+        } else {
+            notVanishedPremV = true;
+        }
+        return canBeMentionedHasPerm && isNotExcluded && notVanishedEss && notVanishedPremV;
     }
 }
