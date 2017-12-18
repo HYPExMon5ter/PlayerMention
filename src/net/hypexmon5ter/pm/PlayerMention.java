@@ -35,10 +35,9 @@ public class PlayerMention extends JavaPlugin {
     public Set<UUID> excluded = new HashSet<>();
     public ArrayList<Player> cooldown = new ArrayList<>();
 
-    public boolean useOldWay = getConfig().getBoolean("useOldWay");
-    public boolean needsPrefix = getConfig().getBoolean("needsPrefix");
-    public boolean needsPermission = getConfig().getBoolean("needPermissionToMention");
-
+    public boolean useOldWay;
+    public boolean needsPrefix;
+    public boolean needsPermission;
 
     public boolean essentialsHook;
     public boolean factionChatHook;
@@ -100,7 +99,7 @@ public class PlayerMention extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        checkConfig();
+        cacheConfigs();
 
         PluginDescriptionFile pdfFile = getDescription();
 
@@ -156,13 +155,17 @@ public class PlayerMention extends JavaPlugin {
 
     }
 
+    public String parseColors(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
+
     public String convertPlaceholders(Player p, String msg) {
         if (isPAPIEnabled) {
-            return PlaceholderAPI.setPlaceholders(p.getPlayer(), msg);
+            return parseColors(PlaceholderAPI.setPlaceholders(p.getPlayer(), msg));
         } else if (isMVdWEnabled) {
-            return be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(p.getPlayer(), msg);
+            return parseColors(be.maximvdw.placeholderapi.PlaceholderAPI.replacePlaceholders(p.getPlayer(), msg));
         } else {
-            return msg;
+            return parseColors(msg);
         }
     }
 
@@ -191,7 +194,11 @@ public class PlayerMention extends JavaPlugin {
         isSkriptEnabled = Bukkit.getPluginManager().isPluginEnabled("Skript");
     }
 
-    public void checkConfig() {
+    public void cacheConfigs() {
+        useOldWay = getConfig().getBoolean("useOldWay");
+        needsPrefix = getConfig().getBoolean("needsPrefix");
+        needsPermission = getConfig().getBoolean("needPermissionToMention");
+
         essentialsHook = getConfig().getBoolean("hooks.Essentials");
         factionChatHook = getConfig().getBoolean("hooks.FactionChat");
         mcmmoHook = getConfig().getBoolean("hooks.mcMMO");
