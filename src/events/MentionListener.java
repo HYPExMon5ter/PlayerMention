@@ -34,14 +34,14 @@ public class MentionListener implements Listener {
         }
         String[] split = msg.split(" ");
         for (final Player p : Bukkit.getOnlinePlayers()) {
-            //if (p != e.getPlayer()) {
-            if (PM.useOldWay ? msg.contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase()) : Arrays.asList(split).contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
-                MP.mention(e.getPlayer(), p.getPlayer());
-                if (PM.regReplacementEnabled) {
-                    e.setMessage(msg.replaceAll(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase(), PM.convertPlaceholders(p, PM.regReplacement.replaceAll("%player%", p.getName()).replaceAll("%nick%", p.getDisplayName()))));
+            if (p != e.getPlayer()) {
+                if (PM.useOldWay ? msg.contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase()) : Arrays.asList(split).contains(PM.needsPrefix ? PM.regPrefix + p.getName().toLowerCase() : p.getName().toLowerCase())) {
+                    MP.mention(e.getPlayer(), p.getPlayer());
+                    if (PM.regReplacementEnabled) {
+                        e.setMessage(e.getMessage().replaceAll(PM.needsPrefix ? PM.regPrefix + p.getName() : p.getName(), PM.convertPlaceholders(p, PM.regReplacement.replaceAll("%player%", p.getName()).replaceAll("%nick%", p.getDisplayName()))));
+                    }
                 }
             }
-            //}
         }
     }
 }
