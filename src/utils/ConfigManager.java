@@ -50,6 +50,14 @@ public class ConfigManager {
 		}
 	}
 
+	public void reloadConfig() {
+		try {
+			config = YamlConfiguration.loadConfiguration(file);
+		} catch(Exception e) {
+			System.err.println("Couldn't reload " + fileName);
+		}
+	}
+
 	public FileConfiguration getConfig() {
 		return config;
 	}

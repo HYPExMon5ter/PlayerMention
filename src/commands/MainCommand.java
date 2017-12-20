@@ -1,5 +1,6 @@
 package commands;
 
+import methods.MentionEveryone;
 import net.hypexmon5ter.pm.PlayerMention;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -10,6 +11,7 @@ import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
@@ -19,9 +21,11 @@ public class MainCommand implements CommandExecutor {
     private String sounds = EnumUtils.getEnumList(Sound.class).toString().replaceAll("\\[", "").replaceAll("]", "");
 
     private PlayerMention PM;
+    private MentionEveryone ME;
 
     public MainCommand(PlayerMention PM) {
         this.PM = PM;
+        ME = new MentionEveryone(PM);
     }
 
     private boolean isBoolean(String s) {
@@ -44,6 +48,9 @@ public class MainCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+        Player p = (Player) sender;
+
         if (!(sender.hasPermission("pm.admin"))) {
             sender.sendMessage("You don't have permission");
             return false;
@@ -51,7 +58,7 @@ public class MainCommand implements CommandExecutor {
 
         if (args.length == 0) {
             sender.sendMessage(PM.parseColors("&b&l&m----------&8&l[&a&lPlayerMention Help Menu&8&l]&b&l&m----------"));
-            sender.sendMessage(PM.parseColors("&e&oTIP: &7&oClick on commands to paste them in your chat."));
+            sender.sendMessage(PM.parseColors("&e&oTIP: &7&oClick on commands to paste them in your chat or to run them."));
             sender.sendMessage("");
             sender.spigot().sendMessage(new ComponentBuilder("○ ").color(net.md_5.bungee.api.ChatColor.GRAY)
                     .append("/playermention config <key> <value>")
@@ -66,17 +73,17 @@ public class MainCommand implements CommandExecutor {
             sender.spigot().sendMessage(new ComponentBuilder("○ ").color(net.md_5.bungee.api.ChatColor.GRAY)
                     .append("/playermention reload")
                     .color(net.md_5.bungee.api.ChatColor.GREEN)
-                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/playermention reload"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/playermention reload"))
                     .create());
             sender.spigot().sendMessage(new ComponentBuilder("○ ").color(net.md_5.bungee.api.ChatColor.GRAY)
                     .append("/playermention everyone")
                     .color(net.md_5.bungee.api.ChatColor.GREEN)
-                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/playermention everyone"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/playermention everyone"))
                     .create());
             sender.spigot().sendMessage(new ComponentBuilder("○ ").color(net.md_5.bungee.api.ChatColor.GRAY)
                     .append("/playermention toggle")
                     .color(net.md_5.bungee.api.ChatColor.GREEN)
-                    .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/playermention toggle"))
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/playermention toggle"))
                     .create());
             return false;
         }
@@ -134,14 +141,47 @@ public class MainCommand implements CommandExecutor {
 
         } else if (args[0].equalsIgnoreCase("messages")) {
             String messageStrings = PM.msgs.getConfig().getKeys(true).toString().replaceAll("\\[", "").replaceAll("]", "");
-            sender.sendMessage(messageStrings);
+            String[] splitMessageStrings = messageStrings.split(", ");
+            if (args.length == 1) {
+                sender.sendMessage(messageStrings);
+            } else {
+                if (Arrays.asList(splitMessageStrings).contains(args[1])) {
+                    if (args.length == 2) {
+                        sender.sendMessage(PM.msgs.getConfig().get(args[1]).toString());
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 2; i < args.length; i++) {
+                            sb.append(args[i]).append(" ");
+                        }
 
+                        String m = ChatColor.translateAlternateColorCodes('&', sb.toString().trim());
+
+                        PM.msgs.getConfig().set(args[1], m);
+                        PM.msgs.saveConfig();
+                        PM.cacheConfigs();
+                        sender.sendMessage("Successfully set " + args[1] + " to '" + m + "'.");
+                    }
+                } else {
+                    sender.sendMessage("Not a valid key.");
+                }
+            }
         } else if (args[0].equalsIgnoreCase("reload")) {
             PM.reloadConfig();
+            PM.msgs.reloadConfig();
+            PM.cacheConfigs();
             sender.sendMessage("Successfully reloaded PlayerMention.");
 
         } else if (args[0].equalsIgnoreCase("everyone")) {
-            sender.sendMessage("Everyone");
+            ME.mentionEveryone(p);
+
+        } else if (args[0].equalsIgnoreCase("toggle")) {
+            if (PM.excluded.contains(p.getUniqueId())) {
+                PM.excluded.remove(p.getUniqueId());
+                sender.sendMessage("You can now be mentioned again.");
+            } else {
+                PM.excluded.add(p.getUniqueId());
+                sender.sendMessage("You can no longer be mentioned.");
+            }
 
         } else {
             sender.sendMessage("Not a valid argument");
