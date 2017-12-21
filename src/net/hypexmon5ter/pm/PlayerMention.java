@@ -103,9 +103,6 @@ public class PlayerMention extends JavaPlugin {
     private ConsoleCommandSender console;
 
     public void onEnable() {
-        Metrics metrics = new Metrics(this);
-        //metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> "My value"));
-
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);
@@ -171,6 +168,13 @@ public class PlayerMention extends JavaPlugin {
 
             new EventVals();
         }
+
+        Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> String.valueOf(updateNotifications)));
+        metrics.addCustomChart(new Metrics.SimplePie("usingOldWay", () -> String.valueOf(useOldWay)));
+        metrics.addCustomChart(new Metrics.SimplePie("needsPrefix", () -> String.valueOf(needsPrefix)));
+        metrics.addCustomChart(new Metrics.SimplePie("needsPermToMention", () -> String.valueOf(needsPermission)));
+
     }
 
     public void onDisable() {
