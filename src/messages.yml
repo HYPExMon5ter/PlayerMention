@@ -1,1 +1,17 @@
-test: this is a test
+prefix: '&8&l[&a&lPlayerMention&8&l] '
+no-permission: '&cI''m sorry but you do not have permission to use this command.'
+commands:
+  success: '&aSuccessfully set ''&7%path%&a'' to ''&7%value%&a''.'
+  not-a-valid-path: '&cThat is not a valid path in the config.'
+  current-value: '&7The current value of ''&9%path%&7'' is ''&3%value%&r&7''.'
+  available-paths: '&7The paths available right now are: &a%paths%'
+  config:
+    can-only-be-boolean: '&cSorry but this path can only be ''true'' or ''false''.'
+    can-only-be-number: '&cSorry but this path can only be a number.'
+  reload:
+    success: '&aSuccessfully reloaded PlayerMention.'
+  everyone:
+    success: '&aSuccessfully mentioned everyone.'
+  toggle:
+    enabled: '&cYou can no longer be mentioned.'
+    disabled: '&aYou can now be mentioned again.'

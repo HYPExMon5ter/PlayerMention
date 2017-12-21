@@ -8,7 +8,9 @@ import com.lenis0012.bukkit.marriage2.internal.MarriagePlugin;
 import commands.MainCommand;
 import events.MentionListener;
 import events.OnMentionEvent;
+import events.onJoin;
 import me.clip.placeholderapi.PlaceholderAPI;
+import methods.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -38,6 +40,7 @@ public class PlayerMention extends JavaPlugin {
     public boolean useOldWay;
     public boolean needsPrefix;
     public boolean needsPermission;
+    public boolean updateNotifications;
 
     public boolean essentialsHook;
     public boolean factionChatHook;
@@ -49,8 +52,6 @@ public class PlayerMention extends JavaPlugin {
     private boolean isPAPIEnabled;
     private boolean isMVdWEnabled;
     private boolean isSkriptEnabled;
-
-    public String consolePrefix = "[PlayerMention] ";
 
     public String regPrefix;
     public boolean regTitlesEnabled;
@@ -83,8 +84,21 @@ public class PlayerMention extends JavaPlugin {
     public String everyoneReplacement;
     public boolean everyoneMessageEnabled;
     public String everyoneMessage;
+
+    public String prefix;
+    public String noPermission;
+    public String success;
+    public String notAValidPath;
+    public String currentValue;
+    public String availablePaths;
+    public String canOnlyBeBool;
+    public String canOnlyBeNumber;
+    public String reloadSuccess;
+    public String everyoneSuccess;
+    public String toggleOn;
+    public String toggleOff;
+
     public Essentials ess;
-    //public uSkyBlockAPI uapi;
     public ConfigManager msgs;
     private ConsoleCommandSender console;
 
@@ -104,10 +118,17 @@ public class PlayerMention extends JavaPlugin {
         PluginDescriptionFile pdfFile = getDescription();
 
         console = Bukkit.getConsoleSender();
-        console.sendMessage(consolePrefix + "§ahas successfully loaded, enjoy!");
+        console.sendMessage(prefix + "§ahas successfully loaded, enjoy!");
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
         console.sendMessage("Info:");
         console.sendMessage("Running version: " + pdfFile.getVersion());
+        if (updateNotifications) {
+            if (new UpdateChecker(this).needsUpdate()) {
+                console.sendMessage(parseColors("&aA new update is out for PlayerMention! Download it here: https://www.spigotmc.org/resources/playermention.8963/"));
+            } else {
+                console.sendMessage(parseColors("&aYou're up-to-date!"));
+            }
+        }
         if (isPAPIEnabled) {
             console.sendMessage("Hooked into PlaceholderAPI");
         }
@@ -138,6 +159,7 @@ public class PlayerMention extends JavaPlugin {
         }
         console.sendMessage("§8-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
+        getServer().getPluginManager().registerEvents(new onJoin(this), this);
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
 
         getCommand("playermention").setExecutor(new MainCommand(this));
@@ -195,9 +217,11 @@ public class PlayerMention extends JavaPlugin {
     }
 
     public void cacheConfigs() {
+        //config
         useOldWay = getConfig().getBoolean("useOldWay");
         needsPrefix = getConfig().getBoolean("needsPrefix");
         needsPermission = getConfig().getBoolean("needPermissionToMention");
+        updateNotifications = getConfig().getBoolean("updateNotifications");
 
         essentialsHook = getConfig().getBoolean("hooks.Essentials");
         factionChatHook = getConfig().getBoolean("hooks.FactionChat");
@@ -237,5 +261,21 @@ public class PlayerMention extends JavaPlugin {
         everyoneReplacement = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.replacement.text"));
         everyoneMessageEnabled = getConfig().getBoolean("Everyone.message.enabled");
         everyoneMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("Everyone.message.text"));
+
+
+        //messages
+        prefix = ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("prefix"));
+        noPermission = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("no-permission"));
+        success = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.success"));
+        notAValidPath = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.not-a-valid-path"));
+        currentValue = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.current-value"));
+        availablePaths = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.available-paths"));
+        canOnlyBeBool = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-boolean"));
+        canOnlyBeNumber = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-number"));
+        reloadSuccess = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.reload.success"));
+        everyoneSuccess = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.everyone.success"));
+        toggleOn = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.toggle.enabled"));
+        toggleOff = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.toggle.disabled"));
+
     }
 }

@@ -46,7 +46,7 @@ public class MentionPlayer {
                                 target.playSound(target.getLocation(), Sounds.valueOf(PM.regSound).bukkitSound(), 100.0F, 1.0F);
                             }
                         } catch (Exception e) {
-                            System.err.println(PM.consolePrefix + ChatColor.RED + "That is not a valid sound (Error at 'Regular.sound')");
+                            System.err.println(PM.prefix + ChatColor.RED + "That is not a valid sound (Error at 'Regular.sound')");
                         }
 
                         if (PM.regTitlesEnabled) {

@@ -38,7 +38,7 @@ public class MentionEveryone {
                                 target.playSound(target.getLocation(), Sounds.valueOf(PM.everyoneSound).bukkitSound(), 100.0F, 1.0F);
                             }
                         } catch (Exception e) {
-                            System.err.println(PM.consolePrefix + ChatColor.RED + "That is not a valid sound (Error at 'Everyone.sound')");
+                            System.err.println(PM.prefix + ChatColor.RED + "That is not a valid sound (Error at 'Everyone.sound')");
                         }
 
                         if (PM.everyoneTitlesEnabled) {

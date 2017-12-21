@@ -45,6 +45,7 @@ Everyone:
 useOldWay: true
 needPermissionToMention: false
 needsPrefix: false
+updateNotifications: true
 hooks:
   Essentials: true
   FactionChat: true

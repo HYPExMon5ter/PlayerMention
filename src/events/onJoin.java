@@ -1,5 +1,6 @@
 package events;
 
+import methods.UpdateChecker;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,11 +11,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.UUID;
 
-public class IsDev implements Listener {
+public class onJoin implements Listener {
 
     private PlayerMention PM;
 
-    public IsDev(PlayerMention PM) {
+    public onJoin(PlayerMention PM) {
         this.PM = PM;
     }
 
@@ -34,7 +35,15 @@ public class IsDev implements Listener {
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, () -> {
             if (isHYPE(p)) {
-                p.sendMessage(ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion());
+                if (new UpdateChecker(PM).needsUpdate()) {
+                    p.sendMessage(PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion() + ChatColor.RED + " (outdated)");
+                } else {
+                    p.sendMessage(PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion());
+                }
+            } else {
+                if (p.hasPermission("pm.admin") && new UpdateChecker(PM).needsUpdate()) {
+                    p.sendMessage(PM.prefix + PM.parseColors("&aA new update is out for PlayerMention! Download it here: https://www.spigotmc.org/resources/playermention.8963/"));
+                }
             }
         }, 120);
     }
