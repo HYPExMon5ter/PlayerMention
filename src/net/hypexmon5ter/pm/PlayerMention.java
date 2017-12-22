@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.earth2me.essentials.Essentials;
-import com.lenis0012.bukkit.marriage2.internal.MarriagePlugin;
 import commands.MainCommand;
 import events.MentionListener;
 import events.OnMentionEvent;
@@ -19,9 +18,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import skript.EventVals;
 import skript.ExprPlayerMentioned;
-import us.talabrek.ultimateskyblock.SkyBlockChunkGenerator;
-import us.talabrek.ultimateskyblock.api.uSkyBlockAPI;
-import us.talabrek.ultimateskyblock.menu.SkyBlockMenu;
 import utils.ConfigManager;
 import utils.Metrics;
 
@@ -29,8 +25,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
-import static com.lenis0012.bukkit.marriage2.internal.MarriagePlugin.getCore;
 
 public class PlayerMention extends JavaPlugin {
 
@@ -93,6 +87,8 @@ public class PlayerMention extends JavaPlugin {
     public String availablePaths;
     public String canOnlyBeBool;
     public String canOnlyBeNumber;
+    public String canOnlyBeSound;
+    public String canOnlyBeParticle;
     public String reloadSuccess;
     public String everyoneSuccess;
     public String toggleOn;
@@ -276,6 +272,8 @@ public class PlayerMention extends JavaPlugin {
         availablePaths = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.available-paths"));
         canOnlyBeBool = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-boolean"));
         canOnlyBeNumber = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-number"));
+        canOnlyBeSound = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-sound"));
+        canOnlyBeParticle = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.config.can-only-be-particle"));
         reloadSuccess = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.reload.success"));
         everyoneSuccess = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.everyone.success"));
         toggleOn = prefix + ChatColor.translateAlternateColorCodes('&', msgs.getConfig().getString("commands.toggle.enabled"));

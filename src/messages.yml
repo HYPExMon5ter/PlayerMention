@@ -8,6 +8,8 @@ commands:
   config:
     can-only-be-boolean: '&cSorry but this path can only be ''true'' or ''false''.'
     can-only-be-number: '&cSorry but this path can only be a number.'
+    can-only-be-sound: '&cSorry but this path can only be a sound. Here is a list of them: &a%sounds%'
+    can-only-be-particle: '&cSorry but this path can only be a particle. Here is a list of them: &a%particles%'
   reload:
     success: '&aSuccessfully reloaded PlayerMention.'
   everyone:

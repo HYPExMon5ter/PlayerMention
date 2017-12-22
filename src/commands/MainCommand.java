@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -14,6 +15,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import utils.Sounds;
 
 import java.util.Arrays;
 
@@ -124,6 +126,24 @@ public class MainCommand implements CommandExecutor {
                                     sender.sendMessage(PM.canOnlyBeNumber);
                                 } else {
                                     PM.getConfig().set(args[1], Integer.valueOf(args[2]));
+                                    PM.saveConfig();
+                                    PM.cacheConfigs();
+                                    sender.sendMessage(PM.success.replaceAll("%path%", args[1]).replaceAll("%value%", args[2]));
+                                }
+                            } else if (args[1].equals("Regular.sound") || (args[1].equalsIgnoreCase("Everyone.sound"))) {
+                                if (!(EnumUtils.isValidEnum(Sound.class, args[2]))) {
+                                    sender.sendMessage(PM.canOnlyBeSound.replaceAll("%sounds%", sounds));
+                                } else {
+                                    PM.getConfig().set(args[1], Sounds.valueOf(args[2]));
+                                    PM.saveConfig();
+                                    PM.cacheConfigs();
+                                    sender.sendMessage(PM.success.replaceAll("%path%", args[1]).replaceAll("%value%", args[2]));
+                                }
+                            } else if (args[1].equals("Regular.particles.particle-type") || (args[1].equals("Everyone.particles.particle-type"))) {
+                                if (!(EnumUtils.isValidEnum(Particle.class, args[2]))) {
+                                    sender.sendMessage(PM.canOnlyBeParticle.replaceAll("%particles%", particles));
+                                } else {
+                                    PM.getConfig().set(args[1], Particle.valueOf(args[2]));
                                     PM.saveConfig();
                                     PM.cacheConfigs();
                                     sender.sendMessage(PM.success.replaceAll("%path%", args[1]).replaceAll("%value%", args[2]));
