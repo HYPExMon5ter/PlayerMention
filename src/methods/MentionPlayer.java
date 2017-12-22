@@ -36,7 +36,7 @@ public class MentionPlayer {
                     Bukkit.getPluginManager().callEvent(event);
                     if (!(event.isCancelled())) {
                         if (PM.regMessageEnabled) {
-                            target.sendMessage(PM.convertPlaceholders(target.getPlayer(), PM.regMessage.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            target.sendMessage(PM.convertPlaceholders(mentioner, PM.regMessage.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         try {
@@ -50,11 +50,11 @@ public class MentionPlayer {
                         }
 
                         if (PM.regTitlesEnabled) {
-                            TitleAPI.sendTitle(target, 0, 5 * 20, 20, PM.convertPlaceholders(target, PM.regTitle.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())), PM.convertPlaceholders(target, PM.regSubtitle.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            TitleAPI.sendTitle(target, 0, 5 * 20, 20, PM.convertPlaceholders(mentioner, PM.regTitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())), PM.convertPlaceholders(mentioner, PM.regSubtitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         if (PM.regActionbarEnabled) {
-                            ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(target, PM.regActionbar.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.regActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         if (PM.regParticlesEnabled) {
@@ -83,8 +83,8 @@ public class MentionPlayer {
                             }.runTaskTimer(PM, 0, 1);
                         }
 
-                        if (!(target.hasPermission("pm.bypass") || target.hasPermission("pm.admin"))) {
-                            MU.addToCooldown(target);
+                        if (!(mentioner.hasPermission("pm.bypass") || mentioner.hasPermission("pm.admin"))) {
+                            MU.addToCooldown(mentioner);
                         }
                     }
                 }

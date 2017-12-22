@@ -28,7 +28,7 @@ public class MentionEveryone {
                     Bukkit.getPluginManager().callEvent(event);
                     if (!(event.isCancelled())) {
                         if (PM.everyoneMessageEnabled) {
-                            target.sendMessage(PM.convertPlaceholders(target, PM.everyoneMessage.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            target.sendMessage(PM.convertPlaceholders(mentioner, PM.everyoneMessage.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         try {
@@ -42,11 +42,11 @@ public class MentionEveryone {
                         }
 
                         if (PM.everyoneTitlesEnabled) {
-                            TitleAPI.sendTitle(target, 0, 5 * 20, 20, PM.convertPlaceholders(target, PM.everyoneTitle.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())), PM.convertPlaceholders(target, PM.everyoneSubtitle.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            TitleAPI.sendTitle(target, 0, 5 * 20, 20, PM.convertPlaceholders(mentioner, PM.everyoneTitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())), PM.convertPlaceholders(mentioner, PM.everyoneSubtitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         if (PM.everyoneActionbarEnabled) {
-                            ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(target, PM.everyoneActionbar.replaceAll("%player%", target.getName()).replaceAll("%nick%", target.getDisplayName())));
+                            ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.everyoneActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
                         if (PM.everyoneParticlesEnabled) {
@@ -75,8 +75,8 @@ public class MentionEveryone {
                             }.runTaskTimer(PM, 0, 1);
                         }
 
-                        if (!(target.hasPermission("pm.bypass") || target.hasPermission("pm.admin"))) {
-                            MU.addToCooldown(target);
+                        if (!(mentioner.hasPermission("pm.bypass") || mentioner.hasPermission("pm.admin"))) {
+                            MU.addToCooldown(mentioner);
                         }
                     }
                 }
