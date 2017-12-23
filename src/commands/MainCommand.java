@@ -2,11 +2,8 @@ package commands;
 
 import methods.MentionEveryone;
 import net.hypexmon5ter.pm.PlayerMention;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import org.apache.commons.lang.enums.Enum;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;

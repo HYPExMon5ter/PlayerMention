@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.InvocationTargetException;
 
 public class ActionbarAPI {
-    public static boolean works = true;
-    public static String nmsver;
 
     public static Class<?> getNmsClass(String nmsClassName)
             throws ClassNotFoundException {
@@ -21,8 +19,7 @@ public class ActionbarAPI {
 
     public static void sendActionBar(Player p, String msg) {
         try {
-            if ((getServerVersion().equalsIgnoreCase("v1_12_R1")) ||
-                    (getServerVersion().equalsIgnoreCase("v1_12_R2"))) {
+            if ((getServerVersion().contains("v1_12_"))) {
                 Object icbc = getNmsClass("ChatComponentText").getConstructor(new Class[]{String.class}).newInstance(new Object[]{ChatColor.translateAlternateColorCodes('&', msg)});
                 Object cmt = getNmsClass("ChatMessageType").getField("GAME_INFO").get(null);
 
@@ -33,32 +30,8 @@ public class ActionbarAPI {
                 Object pcon = nmsp.getClass().getField("playerConnection").get(nmsp);
 
                 pcon.getClass().getMethod("sendPacket", new Class[]{getNmsClass("Packet")}).invoke(pcon, new Object[]{ppoc});
-            } else if ((getServerVersion().equalsIgnoreCase("v1_9_R1")) ||
-                    (getServerVersion().equalsIgnoreCase("v1_9_R2")) ||
-                    (getServerVersion().equalsIgnoreCase("v1_10_R1")) ||
-                    (getServerVersion().equalsIgnoreCase("v1_11_R1"))) {
+            } else if (getServerVersion().contains("v1_9_") || getServerVersion().contains("v1_10_") || getServerVersion().contains("v1_11_")) {
                 Object icbc = getNmsClass("ChatComponentText").getConstructor(new Class[]{String.class}).newInstance(new Object[]{ChatColor.translateAlternateColorCodes('&', msg)});
-
-                Object ppoc = getNmsClass("PacketPlayOutChat").getConstructor(new Class[]{getNmsClass("IChatBaseComponent"), Byte.TYPE}).newInstance(new Object[]{icbc, 2});
-
-                Object nmsp = p.getClass().getMethod("getHandle", new Class[0]).invoke(p, new Object[0]);
-
-                Object pcon = nmsp.getClass().getField("playerConnection").get(nmsp);
-
-                pcon.getClass().getMethod("sendPacket", new Class[]{getNmsClass("Packet")}).invoke(pcon, new Object[]{ppoc});
-            } else if ((getServerVersion().equalsIgnoreCase("v1_8_R2")) ||
-                    (getServerVersion().equalsIgnoreCase("v1_8_R3"))) {
-                Object icbc = getNmsClass("IChatBaseComponent$ChatSerializer").getMethod("a", new Class[]{String.class}).invoke(null, new Object[]{"{'text': '" + msg + "'}"});
-
-                Object ppoc = getNmsClass("PacketPlayOutChat").getConstructor(new Class[]{getNmsClass("IChatBaseComponent"), Byte.TYPE}).newInstance(new Object[]{icbc, 2});
-
-                Object nmsp = p.getClass().getMethod("getHandle", new Class[0]).invoke(p, new Object[0]);
-
-                Object pcon = nmsp.getClass().getField("playerConnection").get(nmsp);
-
-                pcon.getClass().getMethod("sendPacket", new Class[]{getNmsClass("Packet")}).invoke(pcon, new Object[]{ppoc});
-            } else {
-                Object icbc = getNmsClass("ChatSerializer").getMethod("a", new Class[]{String.class}).invoke(null, new Object[]{"{'text': '" + msg + "'}"});
 
                 Object ppoc = getNmsClass("PacketPlayOutChat").getConstructor(new Class[]{getNmsClass("IChatBaseComponent"), Byte.TYPE}).newInstance(new Object[]{icbc, 2});
 

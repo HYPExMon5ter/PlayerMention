@@ -56,7 +56,6 @@ public class MentionPlayer {
                         if (PM.regActionbarEnabled) {
                             ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.regActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
-
                         if (PM.regParticlesEnabled) {
                             new BukkitRunnable() {
                                 double phi = 0;

@@ -15,9 +15,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.fusesource.jansi.Ansi;
 import skript.EventVals;
 import skript.ExprPlayerMentioned;
+import utils.ActionbarAPI;
 import utils.ConfigManager;
 import utils.Metrics;
 
@@ -99,6 +102,13 @@ public class PlayerMention extends JavaPlugin {
     private ConsoleCommandSender console;
 
     public void onEnable() {
+        if (!(ActionbarAPI.getServerVersion().contains("v1_9_") || ActionbarAPI.getServerVersion().contains("v1_10_")
+                || ActionbarAPI.getServerVersion().contains("v1_11_") || ActionbarAPI.getServerVersion().contains("v1_12_"))) {
+            Bukkit.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED).toString() + "You're running PlayerMention on a unsupported minecraft version, disabling." + Ansi.ansi().fg(Ansi.Color.WHITE).toString());
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);

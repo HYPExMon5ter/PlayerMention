@@ -49,6 +49,7 @@ public class MentionEveryone {
                             ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.everyoneActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
+
                         if (PM.everyoneParticlesEnabled) {
                             new BukkitRunnable() {
                                 double phi = 0;
