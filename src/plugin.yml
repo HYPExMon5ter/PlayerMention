@@ -1,7 +1,7 @@
 main: net.hypexmon5ter.pm.PlayerMention
 name: PlayerMention
 author: HYPExMon5ter
-version: 3.3.2
+version: 3.4
 softdepend: [PlaceholderAPI, MVdWPlaceholderAPI, Essentials, FactionChat, mcMMO, SuperVanish, PremiumVanish, Skript, Marriage]
 
 commands:

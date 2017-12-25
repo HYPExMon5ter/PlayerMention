@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fusesource.jansi.Ansi;
 import skript.EventVals;
@@ -23,6 +22,7 @@ import skript.ExprPlayerMentioned;
 import utils.ActionbarAPI;
 import utils.ConfigManager;
 import utils.Metrics;
+import utils.TabCompleteHandler;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,8 +102,9 @@ public class PlayerMention extends JavaPlugin {
     private ConsoleCommandSender console;
 
     public void onEnable() {
-        if (!(ActionbarAPI.getServerVersion().contains("v1_9_") || ActionbarAPI.getServerVersion().contains("v1_10_")
-                || ActionbarAPI.getServerVersion().contains("v1_11_") || ActionbarAPI.getServerVersion().contains("v1_12_"))) {
+        String[] splitVer = ActionbarAPI.getServerVersion().split("_");
+        Integer ver = Integer.valueOf(splitVer[1]);
+        if (!(ver > 8)) {
             Bukkit.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED).toString() + "You're running PlayerMention on a unsupported minecraft version, disabling." + Ansi.ansi().fg(Ansi.Color.WHITE).toString());
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -166,6 +167,7 @@ public class PlayerMention extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MentionListener(this), this);
 
         getCommand("playermention").setExecutor(new MainCommand(this));
+        getCommand("playermention").setTabCompleter(new TabCompleteHandler(this));
 
         if (isSkriptEnabled) {
             Skript.registerAddon(this);
