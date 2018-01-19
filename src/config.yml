@@ -42,7 +42,7 @@ Everyone:
   message:
     enabled: true
     text: '&a%player% &dhas mentioned &beveryone!'
-useOldWay: true
+useOldWay: false
 needPermissionToMention: false
 needsPrefix: false
 updateNotifications: true
