@@ -1,8 +1,6 @@
-package methods;
+package net.hypexmon5ter.pm.methods;
 
 import net.hypexmon5ter.pm.PlayerMention;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

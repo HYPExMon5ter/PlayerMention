@@ -4,12 +4,12 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.earth2me.essentials.Essentials;
-import commands.MainCommand;
-import events.MentionListener;
-import events.OnMentionEvent;
-import events.onJoin;
+import net.hypexmon5ter.pm.commands.MainCommand;
+import net.hypexmon5ter.pm.events.MentionListener;
+import net.hypexmon5ter.pm.events.OnMentionEvent;
+import net.hypexmon5ter.pm.events.onJoin;
 import me.clip.placeholderapi.PlaceholderAPI;
-import methods.UpdateChecker;
+import net.hypexmon5ter.pm.methods.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,12 +17,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.fusesource.jansi.Ansi;
-import skript.EventVals;
-import skript.ExprPlayerMentioned;
-import utils.ActionbarAPI;
-import utils.ConfigManager;
-import utils.Metrics;
-import utils.TabCompleteHandler;
+import net.hypexmon5ter.pm.skript.EventVals;
+import net.hypexmon5ter.pm.skript.ExprPlayerMentioned;
+import net.hypexmon5ter.pm.utils.ActionbarAPI;
+import net.hypexmon5ter.pm.utils.ConfigManager;
+import net.hypexmon5ter.pm.utils.Metrics;
+import net.hypexmon5ter.pm.utils.TabCompleteHandler;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -102,14 +102,6 @@ public class PlayerMention extends JavaPlugin {
     private ConsoleCommandSender console;
 
     public void onEnable() {
-        String[] splitVer = ActionbarAPI.getServerVersion().split("_");
-        Integer ver = Integer.valueOf(splitVer[1]);
-        if (!(ver > 8)) {
-            Bukkit.getLogger().severe(Ansi.ansi().fg(Ansi.Color.RED).toString() + "You're running PlayerMention on a unsupported minecraft version, disabling." + Ansi.ansi().fg(Ansi.Color.WHITE).toString());
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);

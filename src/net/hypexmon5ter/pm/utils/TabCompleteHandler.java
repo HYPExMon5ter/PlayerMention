@@ -1,4 +1,4 @@
-package utils;
+package net.hypexmon5ter.pm.utils;
 
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.command.Command;

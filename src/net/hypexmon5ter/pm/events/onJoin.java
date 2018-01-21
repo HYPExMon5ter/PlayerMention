@@ -1,6 +1,6 @@
-package events;
+package net.hypexmon5ter.pm.events;
 
-import methods.UpdateChecker;
+import net.hypexmon5ter.pm.methods.UpdateChecker;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

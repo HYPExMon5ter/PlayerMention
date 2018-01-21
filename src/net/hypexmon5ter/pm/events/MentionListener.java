@@ -1,7 +1,7 @@
-package events;
+package net.hypexmon5ter.pm.events;
 
-import methods.MentionEveryone;
-import methods.MentionPlayer;
+import net.hypexmon5ter.pm.methods.MentionEveryone;
+import net.hypexmon5ter.pm.methods.MentionPlayer;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

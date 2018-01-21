@@ -1,16 +1,18 @@
-package methods;
+package net.hypexmon5ter.pm.methods;
 
-import events.OnMentionEvent;
+import net.hypexmon5ter.pm.events.OnMentionEvent;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import utils.ActionbarAPI;
-import utils.Sounds;
-import utils.TitleAPI;
+import net.hypexmon5ter.pm.utils.ActionbarAPI;
+import net.hypexmon5ter.pm.utils.Sounds;
+import net.hypexmon5ter.pm.utils.TitleAPI;
 
 public class MentionEveryone {
+
+    private String ver = ActionbarAPI.getServerVersion();
 
     private MentionUtilities MU;
     private PlayerMention PM;
@@ -45,35 +47,36 @@ public class MentionEveryone {
                             TitleAPI.sendTitle(target, 0, 5 * 20, 20, PM.convertPlaceholders(mentioner, PM.everyoneTitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())), PM.convertPlaceholders(mentioner, PM.everyoneSubtitle.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
                         }
 
-                        if (PM.everyoneActionbarEnabled) {
-                            ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.everyoneActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
-                        }
+                        if (!(ver.startsWith("v1_8_"))) {
+                            if (PM.everyoneActionbarEnabled) {
+                                ActionbarAPI.sendActionBar(target, PM.convertPlaceholders(mentioner, PM.everyoneActionbar.replaceAll("%player%", mentioner.getName()).replaceAll("%nick%", mentioner.getDisplayName())));
+                            }
 
+                            if (PM.everyoneParticlesEnabled) {
+                                new BukkitRunnable() {
+                                    double phi = 0;
 
-                        if (PM.everyoneParticlesEnabled) {
-                            new BukkitRunnable() {
-                                double phi = 0;
+                                    public void run() {
+                                        Location loc = target.getLocation();
 
-                                public void run() {
-                                    Location loc = target.getLocation();
+                                        phi += Math.PI / 10;
+                                        for (double theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 60) {
+                                            double r = 1.5;
+                                            double x = r * Math.cos(theta) * Math.sin(phi);
+                                            double y = r * Math.cos(phi) + 1.5;
+                                            double z = r * Math.sin(theta) * Math.sin(phi);
+                                            loc.add(x, y, z);
+                                            target.spawnParticle(Particle.valueOf(PM.everyoneParticle), loc, 0, 0, 0, 0, 1);
+                                            loc.subtract(x, y, z);
+                                        }
 
-                                    phi += Math.PI / 10;
-                                    for (double theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 60) {
-                                        double r = 1.5;
-                                        double x = r * Math.cos(theta) * Math.sin(phi);
-                                        double y = r * Math.cos(phi) + 1.5;
-                                        double z = r * Math.sin(theta) * Math.sin(phi);
-                                        loc.add(x, y, z);
-                                        target.spawnParticle(Particle.valueOf(PM.everyoneParticle), loc, 0, 0, 0, 0, 1);
-                                        loc.subtract(x, y, z);
+                                        if (phi > 3 * Math.PI) {
+                                            this.cancel();
+                                        }
+
                                     }
-
-                                    if (phi > 3 * Math.PI) {
-                                        this.cancel();
-                                    }
-
-                                }
-                            }.runTaskTimer(PM, 0, 1);
+                                }.runTaskTimer(PM, 0, 1);
+                            }
                         }
 
                         if (!(mentioner.hasPermission("pm.bypass") || mentioner.hasPermission("pm.admin"))) {
