@@ -1,11 +1,16 @@
 package net.hypexmon5ter.pm.methods;
 
+import com.google.gson.*;
 import net.hypexmon5ter.pm.PlayerMention;
+import org.bukkit.Bukkit;
+import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 public class UpdateChecker {
 
@@ -15,29 +20,27 @@ public class UpdateChecker {
         this.PM = PM;
     }
 
+
+
     public boolean needsUpdate() {
-        String resourceID = "8963";
         String pluginVer = PM.getDescription().getVersion();
-        if (version(resourceID).equals(pluginVer)) {
-            return false;
-        } else {
-            return true;
-        }
-        //return version(resourceID).equals(pluginVer);
+        return !version("8963").equals(pluginVer);
     }
 
     public String version(String resource) {
         try {
-            HttpURLConnection con = (HttpURLConnection)new URL("http://www.spigotmc.org/api/general.php").openConnection();
-            con.setDoOutput(true);
-            con.setRequestMethod("POST");
-            con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
-            String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-            if (version.length() <= 7)
-                return version;
+            HttpURLConnection con = (HttpURLConnection)new URL("https://api.spiget.org/v2/resources/8963/versions/latest").openConnection();
+            con.setRequestMethod("GET");
+            con.connect();
+            InputStream is = con.getInputStream();
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            String content = new String(buffer);
+            JsonObject jsonObject = new JsonParser().parse(content).getAsJsonObject();
+            return jsonObject.get("name").getAsString();
         } catch (Exception ex) {
-            return PM.prefix + PM.parseColors("&cFailed to check for an update..");
+            Bukkit.getLogger().severe(PM.prefix + PM.parseColors("&cFailed to check for an update.."));
+            return PM.getDescription().getVersion();
         }
-        return PM.prefix + PM.parseColors("&cError.. nothing happened when checking for an update.");
     }
 }
