@@ -29,8 +29,12 @@ import java.util.UUID;
 
 public class PlayerMention extends JavaPlugin {
 
+    private static PlayerMention instance;
+
     public Set<UUID> excluded = new HashSet<>();
     public ArrayList<Player> cooldown = new ArrayList<>();
+
+    public boolean needsUpdate;
 
     public boolean useOldWay;
     public boolean needsPrefix;
@@ -100,6 +104,8 @@ public class PlayerMention extends JavaPlugin {
     private ConsoleCommandSender console;
 
     public void onEnable() {
+        instance = this;
+
         checkHooks();
 
         msgs = new ConfigManager(this.getDataFolder().getPath(), "messages.yml", this);
@@ -117,11 +123,10 @@ public class PlayerMention extends JavaPlugin {
         console.sendMessage("Info:");
         console.sendMessage("Running version: " + pdfFile.getVersion());
         if (updateNotifications) {
-            if (new UpdateChecker(this).needsUpdate()) {
-                console.sendMessage(parseColors("&aA new update is out for PlayerMention! Download it here: https://www.spigotmc.org/resources/playermention.8963/"));
-            } else {
-                console.sendMessage(parseColors("&aYou're up-to-date!"));
-            }
+            UpdateChecker.check(
+                    version -> console.sendMessage(parseColors("&aA new update is out for PlayerMention! Download it here: https://www.spigotmc.org/resources/playermention.8963/")),
+                    exception -> console.sendMessage(parseColors("&cAn error occured when checking for an update for PlayerMention."))
+            );
         }
         if (isPAPIEnabled) {
             console.sendMessage("Hooked into PlaceholderAPI");
@@ -191,6 +196,13 @@ public class PlayerMention extends JavaPlugin {
         } else {
             return parseColors(msg);
         }
+    }
+
+    public static PlayerMention getInstance() {
+        if (instance == null) {
+            instance = new PlayerMention();
+        }
+        return instance;
     }
 
     public void checkHooks() {

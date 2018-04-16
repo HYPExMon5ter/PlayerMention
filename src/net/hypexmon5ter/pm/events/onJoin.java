@@ -1,6 +1,5 @@
 package net.hypexmon5ter.pm.events;
 
-import net.hypexmon5ter.pm.methods.UpdateChecker;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +18,7 @@ public class onJoin implements Listener {
         this.PM = PM;
     }
 
-    private boolean isHYPE(Player p) {
+    private boolean isDev(Player p) {
         if (p.getUniqueId().equals(UUID.fromString("df9c0a00-cf82-4c12-800c-eee83fb68fe3")) || p.getName().equalsIgnoreCase("HYPExMon5ter") ||
                 p.getUniqueId().equals(UUID.fromString("ef3acaf-856d-4581-a56b-852e734da40c")) || p.getName().equalsIgnoreCase("HYPExMon5terV2")) {
             return true;
@@ -34,14 +33,11 @@ public class onJoin implements Listener {
         Player p = e.getPlayer();
 
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(PM, () -> {
-            if (isHYPE(p)) {
-                if (new UpdateChecker(PM).needsUpdate()) {
-                    p.sendMessage(PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion() + ChatColor.RED + " (outdated)");
-                } else {
-                    p.sendMessage(PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion());
-                }
+            if (isDev(p)) {
+                p.sendMessage(PM.needsUpdate ? PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion() + ". (Outdated)" :
+                        PM.prefix + ChatColor.GREEN + "This server is using PlayerMention v" + PM.getDescription().getVersion());
             } else {
-                if (p.hasPermission("pm.admin") && new UpdateChecker(PM).needsUpdate()) {
+                if (p.hasPermission("pm.admin") && PM.needsUpdate) {
                     p.sendMessage(PM.prefix + PM.parseColors("&aA new update is out for PlayerMention! Download it here: https://www.spigotmc.org/resources/playermention.8963/"));
                 }
             }

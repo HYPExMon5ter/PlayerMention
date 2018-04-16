@@ -1,46 +1,40 @@
 package net.hypexmon5ter.pm.methods;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.bukkit.Bukkit;
-import org.json.simple.JSONObject;
 
-import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.util.function.Consumer;
 
 public class UpdateChecker {
 
-    private PlayerMention PM;
-
-    public UpdateChecker(PlayerMention PM) {
-        this.PM = PM;
-    }
-
-
-
-    public boolean needsUpdate() {
-        String pluginVer = PM.getDescription().getVersion();
-        return !version("8963").equals(pluginVer);
-    }
-
-    public String version(String resource) {
-        try {
-            HttpURLConnection con = (HttpURLConnection)new URL("https://api.spiget.org/v2/resources/8963/versions/latest").openConnection();
-            con.setRequestMethod("GET");
-            con.connect();
-            InputStream is = con.getInputStream();
-            byte[] buffer = new byte[is.available()];
-            is.read(buffer);
-            String content = new String(buffer);
-            JsonObject jsonObject = new JsonParser().parse(content).getAsJsonObject();
-            return jsonObject.get("name").getAsString();
-        } catch (Exception ex) {
-            Bukkit.getLogger().severe(PM.prefix + PM.parseColors("&cFailed to check for an update.."));
-            return PM.getDescription().getVersion();
-        }
+    public static void check(Consumer<String> success, Consumer<Throwable> fail) {
+        Bukkit.getServer().getScheduler().runTaskAsynchronously(PlayerMention.getInstance(), () -> {
+            try {
+                HttpURLConnection con = (HttpURLConnection) new URL("https://api.spiget.org/v2/resources/8963/versions/latest").openConnection();
+                con.setRequestMethod("GET");
+                con.connect();
+                InputStream is = con.getInputStream();
+                byte[] buffer = new byte[is.available()];
+                is.read(buffer);
+                String content = new String(buffer);
+                JsonObject jsonObject = new JsonParser().parse(content).getAsJsonObject();
+                if (!(PlayerMention.getInstance().getDescription().getVersion().equals(jsonObject.get("name").getAsString()))) {
+                    success.accept(jsonObject.get("name").getAsString());
+                    PlayerMention.getInstance().needsUpdate = true;
+                } else {
+                    PlayerMention.getInstance().needsUpdate = false;
+                }
+            } catch (IOException | JsonSyntaxException e) {
+                fail.accept(e);
+                PlayerMention.getInstance().needsUpdate = false;
+            }
+        });
     }
 }
