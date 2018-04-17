@@ -41,7 +41,7 @@ public class PlayerMention extends JavaPlugin {
     public boolean needsPermission;
     public boolean updateNotifications;
 
-    public boolean essentialsHook;
+    //public boolean essentialsHook;
     public boolean factionChatHook;
     public boolean mcmmoHook;
     public boolean superVanishHook;
@@ -99,7 +99,6 @@ public class PlayerMention extends JavaPlugin {
     public String toggleOn;
     public String toggleOff;
 
-    public Essentials ess;
     public ConfigManager msgs;
     private ConsoleCommandSender console;
 
@@ -134,10 +133,9 @@ public class PlayerMention extends JavaPlugin {
         if (isMVdWEnabled) {
             console.sendMessage("Hooked into MVdW's Placeholder API");
         }
-        if (essentialsHook) {
-            ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+        /*if (essentialsHook) {
             console.sendMessage("Hooked into Essentials");
-        }
+        }*/
         if (factionChatHook) {
             console.sendMessage("Hooked into FactionChat");
         }
@@ -205,10 +203,10 @@ public class PlayerMention extends JavaPlugin {
         return instance;
     }
 
-    public void checkHooks() {
-        if (!(Bukkit.getPluginManager().isPluginEnabled("Essentials"))) {
+    private void checkHooks() {
+        /*if (!(Bukkit.getPluginManager().isPluginEnabled("Essentials"))) {
             getConfig().set("hooks.Essentials", false);
-        }
+        }*/
         if (!(Bukkit.getPluginManager().isPluginEnabled("FactionChat"))) {
             getConfig().set("hooks.FactionChat", false);
         }
@@ -237,7 +235,7 @@ public class PlayerMention extends JavaPlugin {
         needsPermission = getConfig().getBoolean("needPermissionToMention");
         updateNotifications = getConfig().getBoolean("updateNotifications");
 
-        essentialsHook = getConfig().getBoolean("hooks.Essentials");
+        //essentialsHook = getConfig().getBoolean("hooks.Essentials");
         factionChatHook = getConfig().getBoolean("hooks.FactionChat");
         mcmmoHook = getConfig().getBoolean("hooks.mcMMO");
         superVanishHook = getConfig().getBoolean("hooks.SuperVanish");

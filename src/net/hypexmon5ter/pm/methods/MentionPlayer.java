@@ -1,5 +1,6 @@
 package net.hypexmon5ter.pm.methods;
 
+import com.earth2me.essentials.Essentials;
 import net.hypexmon5ter.pm.events.OnMentionEvent;
 import net.hypexmon5ter.pm.PlayerMention;
 import org.apache.commons.lang3.EnumUtils;
@@ -32,11 +33,14 @@ public class MentionPlayer {
                         return;
                     }
                 }
-                if (PM.essentialsHook) {
-                    if (PM.ess.getUser(mentioner).isIgnoredPlayer(PM.ess.getUser(target)) || PM.ess.getUser(target).isIgnoredPlayer(PM.ess.getUser(mentioner))) {
-                        return;
+                /*if (PM.essentialsHook) {
+                    if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
+                        Essentials ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+                        if (ess.getUser(mentioner).isIgnoredPlayer(ess.getUser(target)) || ess.getUser(target).isIgnoredPlayer(ess.getUser(mentioner))) {
+                            return;
+                        }
                     }
-                }
+                }*/
                 OnMentionEvent event = new OnMentionEvent(mentioner, target);
                 Bukkit.getPluginManager().callEvent(event);
                 if (!(event.isCancelled())) {

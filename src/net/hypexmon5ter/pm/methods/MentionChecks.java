@@ -1,10 +1,12 @@
 package net.hypexmon5ter.pm.methods;
 
+import com.earth2me.essentials.Essentials;
 import com.gmail.nossr50.api.ChatAPI;
 import com.lenis0012.bukkit.marriage2.internal.MarriagePlugin;
 import de.myzelyam.api.vanish.VanishAPI;
 import net.hypexmon5ter.pm.PlayerMention;
 import nz.co.lolnet.james137137.FactionChat.API.FactionChatAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class MentionChecks {
@@ -60,7 +62,7 @@ public class MentionChecks {
 
     private boolean canBeMentionedHasPerm = false;
     private boolean isNotExcluded = false;
-    private boolean notVanishedEss = false;
+    //private boolean notVanishedEss = false;
     private boolean notVanishedPremV = false;
 
     public boolean canBeMentioned(Player target) {
@@ -70,13 +72,18 @@ public class MentionChecks {
         if (!(PM.excluded.contains(target.getUniqueId()))) {
             isNotExcluded = true;
         }
-        if (PM.essentialsHook) {
-            if (!(PM.ess.getUser(target).isVanished())) {
+        /*if (PM.essentialsHook) {
+            if (Bukkit.getPluginManager().isPluginEnabled("Essentials")) {
+                Essentials ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+                if (!(ess.getUser(target).isVanished())) {
+                    notVanishedEss = true;
+                }
+            } else {
                 notVanishedEss = true;
             }
         } else {
             notVanishedEss = true;
-        }
+        }*/
         if (PM.premiumVanishHook || PM.superVanishHook) {
             if (!(VanishAPI.isInvisible(target))) {
                 notVanishedPremV = true;
@@ -84,6 +91,6 @@ public class MentionChecks {
         } else {
             notVanishedPremV = true;
         }
-        return canBeMentionedHasPerm && isNotExcluded && notVanishedEss && notVanishedPremV;
+        return canBeMentionedHasPerm && isNotExcluded /*&& notVanishedEss*/ && notVanishedPremV;
     }
 }
